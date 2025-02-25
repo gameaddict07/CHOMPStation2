@@ -606,7 +606,21 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 	if(!LAZYLEN(mutations))
 		return //No mutations, no icons.
 
+	//TODO: THIS PROC???
+	var/fat
+	if(FAT in mutations)
+		fat = "fat"
+
 	var/image/standing	= image(icon = 'icons/effects/genetics.dmi', layer = BODY_LAYER+MUTATIONS_LAYER)
+	var/g = gender == FEMALE ? "f" : "m"
+
+	for(var/datum/dna/gene/gene in dna_genes)
+		if(!gene.block)
+			continue
+		if(gene.is_active(src))
+			var/underlay = gene.OnDrawUnderlays(src,g,fat)
+			if(underlay)
+				standing.underlays += underlay
 
 	for(var/mut in mutations)
 		if(mut == LASER)
@@ -1427,11 +1441,19 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 /mob/living/carbon/human/proc/get_vore_belly_image()
 	if(!(wear_suit && wear_suit.flags_inv & HIDETAIL))
 		var/vs_fullness = vore_fullness_ex["stomach"]
-		var/icon/vorebelly_s = new/icon(icon = 'modular_chomp/icons/mob/vore/Bellies.dmi', icon_state = "[species.vore_belly_default_variant]Belly[vs_fullness][struggle_anim_stomach ? "" : " idle"]") //CHOMPEdit
-		vorebelly_s.Blend(vore_sprite_color["stomach"], vore_sprite_multiply["stomach"] ? ICON_MULTIPLY : ICON_ADD)
-		var/image/working = image(vorebelly_s)
-		working.overlays += em_block_image_generic(working)
-		return working
+		if(vs_fullness < 5)
+			var/icon/vorebelly_s = new/icon(icon = 'modular_chomp/icons/mob/vore/Bellies.dmi', icon_state = "[species.vore_belly_default_variant]Belly[vs_fullness][struggle_anim_stomach ? "" : " idle"]")
+			vorebelly_s.Blend(vore_sprite_color["stomach"], vore_sprite_multiply["stomach"] ? ICON_MULTIPLY : ICON_ADD)
+			var/image/working = image(vorebelly_s)
+			working.overlays += em_block_image_generic(working)
+			return working
+		if(vs_fullness > 4)
+			var/icon/vorebelly_s = new/icon(icon = 'modular_chomp/icons/mob/vore/Bellies_Big.dmi', icon_state = "[species.vore_belly_default_variant]Belly[vs_fullness][struggle_anim_stomach ? "" : " idle"]")
+			vorebelly_s.Blend(vore_sprite_color["stomach"], vore_sprite_multiply["stomach"] ? ICON_MULTIPLY : ICON_ADD)
+			var/image/working = image(vorebelly_s)
+			working.pixel_x = -20
+			working.overlays += em_block_image_generic(working)
+			return working
 	return null
 
 /mob/living/carbon/human/proc/vore_belly_animation()
