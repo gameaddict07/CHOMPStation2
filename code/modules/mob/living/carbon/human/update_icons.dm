@@ -1443,7 +1443,7 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 			var/icon/vorebelly_s = new/icon(icon = 'modular_chomp/icons/mob/vore/Bellies_Big.dmi', icon_state = "[species.vore_belly_default_variant]Belly[vs_fullness][struggle_anim_stomach ? "" : " idle"]")
 			vorebelly_s.Blend(vore_sprite_color["stomach"], vore_sprite_multiply["stomach"] ? ICON_MULTIPLY : ICON_ADD)
 			var/image/working = image(vorebelly_s)
-			working.pixel_x = -20
+			working.pixel_x = -32
 			working.pixel_y = -16
 			working.overlays += em_block_image_generic(working)
 			return working
