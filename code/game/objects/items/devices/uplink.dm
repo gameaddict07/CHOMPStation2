@@ -174,7 +174,7 @@
 				"items" = (category == selected_cat ? list() : null)
 			)
 		for(var/datum/uplink_item/item in category.items)
-			var/cost = item.cost(src, user) || "???"
+			var/cost = item.cost(src, user.mind.tcrystals) || "???"
 			cat["items"] += list(list(
 				"name" = item.name,
 				"cost" = cost,
@@ -217,8 +217,8 @@
 //
 // Includes normal radio uplink, multitool uplink,
 // implant uplink (not the implant tool) and a preset headset uplink.
-/obj/item/radio/uplink/Initialize()
-	..()
+/obj/item/radio/uplink/Initialize(mapload)
+	. = ..()
 	hidden_uplink = new(src)
 	icon_state = "radio"
 
