@@ -77,6 +77,20 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 	update_icon_special()
 
 /mob/living/carbon/human/update_transform(var/instant = FALSE)
+	/* VOREStation Edit START
+	// First, get the correct size.
+	var/desired_scale_x = icon_scale_x
+	var/desired_scale_y = icon_scale_y
+
+	desired_scale_x *= species.icon_scale_x
+	desired_scale_y *= species.icon_scale_y
+
+	for(var/datum/modifier/M in modifiers)
+		if(!isnull(M.icon_scale_x_percent))
+			desired_scale_x *= M.icon_scale_x_percent
+		if(!isnull(M.icon_scale_y_percent))
+			desired_scale_y *= M.icon_scale_y_percent
+	*/
 	var/desired_scale_x = size_multiplier * icon_scale_x
 	var/desired_scale_y = size_multiplier * icon_scale_y
 	desired_scale_x *= species.icon_scale_x
@@ -88,7 +102,8 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 	appearance_flags |= PIXEL_SCALE
 	if(fuzzy)
 		appearance_flags &= ~PIXEL_SCALE
-		center_offset = 0
+		center_offset = 0 //CHOMPEdit
+	//VOREStation Edit End
 
 	// Regular stuff again.
 	var/matrix/M = matrix()
@@ -99,10 +114,11 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 		anim_time = 1 //Thud
 
 	if(lying && !species.prone_icon) //Only rotate them if we're not drawing a specific icon for being prone.
+		// CHOMPEdit Start Loafy Time
 		if(tail_style?.can_loaf && resting) // Only call these if we're resting?
 			update_tail_showing()
 			M.Scale(desired_scale_x, desired_scale_y)
-			M.Translate(cent_offset * desired_scale_x, (vis_height/2)*(desired_scale_y-1))
+			M.Translate(cent_offset * desired_scale_x, (vis_height/2)*(desired_scale_y-1)) //CHOMPEdit
 		else
 			M.Scale(desired_scale_x, desired_scale_y)
 			if(isnull(rest_dir))
@@ -113,12 +129,13 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 			else
 				M.Translate((1 / desired_scale_x * 4) - (desired_scale_x * cent_offset), 0)
 				M.Turn(90)
+		// CHOMPEdit End
 		layer = MOB_LAYER -0.01 // Fix for a byond bug where turf entry order no longer matters
 	else
-		M.Scale(desired_scale_x, desired_scale_y)
+		M.Scale(desired_scale_x, desired_scale_y)//VOREStation Edit
 		M.Translate(cent_offset * desired_scale_x, (vis_height/2)*(desired_scale_y-1))
-		if(tail_style?.can_loaf)
-			update_tail_showing()
+		if(tail_style?.can_loaf) // VOREStation Edit: Taur Loafing
+			update_tail_showing() // VOREStation Edit: Taur Loafing
 		layer = MOB_LAYER // Fix for a byond bug where turf entry order no longer matters
 
 	if(instant)
@@ -1427,6 +1444,7 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 			vorebelly_s.Blend(vore_sprite_color["stomach"], vore_sprite_multiply["stomach"] ? ICON_MULTIPLY : ICON_ADD)
 			var/image/working = image(vorebelly_s)
 			working.pixel_x = -20
+			working.pixel_y = -16
 			working.overlays += em_block_image_generic(working)
 			return working
 	return null
