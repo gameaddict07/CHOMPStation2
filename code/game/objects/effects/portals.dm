@@ -25,9 +25,11 @@ GLOBAL_LIST_BOILERPLATE(all_portals, /obj/effect/portal)
 	if(AM.is_incorporeal())
 		if(!event)
 			return
-		if(iscarbon(AM))
-			var/mob/living/carbon/human/H = AM
-			H.attack_dephase(null, src)
+		if(isliving(AM))
+			var/mob/living/L = AM
+			var/datum/component/shadekin/SK = L.get_shadekin_component()
+			if(SK)
+				SK.attack_dephase(null, src)
 	if(ismob(AM) && !(isliving(AM)))
 		return	//do not send ghosts, zshadows, ai eyes, etc
 	spawn(0)
@@ -43,7 +45,7 @@ GLOBAL_LIST_BOILERPLATE(all_portals, /obj/effect/portal)
 		return
 	return
 
-/obj/effect/portal/Initialize()
+/obj/effect/portal/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, 30 SECONDS)
 

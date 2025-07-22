@@ -115,7 +115,7 @@
 	nutriment_amt = 15
 	nutriment_desc = list("tortilla" = 2, "meat" = 3, "bean" = 5, REAGENT_ID_CHEESE = 3, "Mexico" = 7)
 
-/obj/item/reagent_containers/food/snacks/slice/bigbeanburrito/Initialize()
+/obj/item/reagent_containers/food/snacks/slice/bigbeanburrito/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_PROTEIN, 12)
 	reagents.add_reagent(REAGENT_ID_NUTRIMENT, 15)
@@ -132,7 +132,7 @@
 	nutriment_amt = 50
 
 
-/obj/item/reagent_containers/food/snacks/sliceable/supremoburrito/Initialize()
+/obj/item/reagent_containers/food/snacks/sliceable/supremoburrito/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_PROTEIN, 50)
 	reagents.add_reagent(REAGENT_ID_NUTRIMENT, 55)
@@ -165,7 +165,7 @@
 /obj/item/reagent_containers/food/snacks/steamtealeaf/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/material/kitchen/rollingpin))
 		new /obj/item/reagent_containers/food/snacks/steamrolltealeaf(src)
-		user << "You roll the steamed tea leaf."
+		to_chat(user, span_notice("You roll the steamed tea leaf."))
 		qdel(src)
 
 /obj/item/reagent_containers/food/snacks/steamrolltealeaf
@@ -276,13 +276,13 @@
 	nutriment_amt = 12
 	nutriment_desc = list("bread" = 4, "sweetness" = 6)
 
-/obj/item/reagent_containers/food/snacks/tastybread/New()
-	..()
+/obj/item/reagent_containers/food/snacks/tastybread/Initialize(mapload)
+	. = ..()
 	if(prob(1))
 		new /obj/item/reagent_containers/food/snacks/tastybread/sequel(src)
-		qdel(src) //Dispose of the body, let no one find it.
+		return INITIALIZE_HINT_QDEL
 
-/obj/item/reagent_containers/food/snacks/tastybread/sequel/Initialize()
+/obj/item/reagent_containers/food/snacks/tastybread/sequel/Initialize(mapload)
 	. = ..()
 	bitesize = 4
 
@@ -302,7 +302,7 @@
 	center_of_mass_y= 9 //CHOMPEdit
 	bitesize = 2
 
-/obj/item/reagent_containers/food/snacks/sliceable/blondies/Initialize()
+/obj/item/reagent_containers/food/snacks/sliceable/blondies/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_PROTEIN, 2)
 
@@ -321,7 +321,7 @@
 /obj/item/reagent_containers/food/snacks/blondiesslice/filled
 	nutriment_amt = 1
 
-/obj/item/reagent_containers/food/snacks/blondiesslice/filled/Initialize()
+/obj/item/reagent_containers/food/snacks/blondiesslice/filled/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_PROTEIN, 1)
 
@@ -336,6 +336,6 @@
 	nutriment_desc = list("deep fried dough" = 2)
 	nutriment_amt = 2
 
-/obj/item/reagent_containers/food/snacks/churro/Initialize()
+/obj/item/reagent_containers/food/snacks/churro/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_COOKINGOIL, 1)

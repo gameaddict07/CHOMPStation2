@@ -1,23 +1,3 @@
-var/global/list/radio_channels_by_freq = list(
-	num2text(PUB_FREQ) = CHANNEL_COMMON,
-	num2text(AI_FREQ)  = CHANNEL_AI_PRIVATE,
-	num2text(ENT_FREQ) = CHANNEL_ENTERTAINMENT,
-	num2text(ERT_FREQ) = CHANNEL_RESPONSE_TEAM,
-	num2text(COMM_FREQ)= CHANNEL_COMMAND,
-	num2text(ENG_FREQ) = CHANNEL_ENGINEERING,
-	num2text(MED_FREQ) = CHANNEL_MEDICAL,
-	num2text(MED_I_FREQ)=CHANNEL_MEDICAL_1,
-	num2text(BDCM_FREQ) =CHANNEL_BODYCAM, // CHOMPEdit
-	num2text(SEC_FREQ) = CHANNEL_SECURITY,
-	num2text(SEC_I_FREQ)=CHANNEL_SECURITY_1,
-	num2text(SCI_FREQ) = CHANNEL_SCIENCE,
-	num2text(SUP_FREQ) = CHANNEL_SUPPLY,
-	num2text(SRV_FREQ) = CHANNEL_SERVICE,
-	num2text(EXP_FREQ) = CHANNEL_EXPLORATION
-	)
-
-GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
-
 /obj/item/paicard
 	name = "personal AI device"
 	icon = 'icons/obj/pda.dmi'
@@ -74,7 +54,7 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 		to_chat(user,span_warning("You cannot join a pAI card when you are banned from playing as a pAI."))
 		return
 
-	for(var/ourkey in paikeys)
+	for(var/ourkey in GLOB.paikeys)
 		if(ourkey == user.ckey)
 			to_chat(user, span_warning("You can't just rejoin any old pAI card!!! Your card still exists."))
 			return
@@ -97,14 +77,14 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 			var/obj/item/paicard/typeb/card = new(location)
 			var/mob/living/silicon/pai/new_pai = new(card)
 			new_pai.key = user.key
-			paikeys |= new_pai.ckey
+			GLOB.paikeys |= new_pai.ckey
 			card.setPersonality(new_pai)
 			new_pai.SetName(actual_pai_name)
 		else
 			var/obj/item/paicard/card = new(location)
 			var/mob/living/silicon/pai/new_pai = new(card)
 			new_pai.key = user.key
-			paikeys |= new_pai.ckey
+			GLOB.paikeys |= new_pai.ckey
 			card.setPersonality(new_pai)
 			new_pai.SetName(actual_pai_name)
 
@@ -113,7 +93,7 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 			var/obj/item/paicard/typeb/card = new(location)
 			var/mob/living/silicon/pai/new_pai = new(card)
 			new_pai.key = user.key
-			paikeys |= new_pai.ckey
+			GLOB.paikeys |= new_pai.ckey
 			card.setPersonality(new_pai)
 			if(!new_pai.savefile_load(new_pai))
 				var/pai_name = tgui_input_text(new_pai, "Choose your character's name", "Character Name")
@@ -125,7 +105,7 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 			var/obj/item/paicard/card = new(location)
 			var/mob/living/silicon/pai/new_pai = new(card)
 			new_pai.key = user.key
-			paikeys |= new_pai.ckey
+			GLOB.paikeys |= new_pai.ckey
 			card.setPersonality(new_pai)
 			if(!new_pai.savefile_load(new_pai))
 				var/pai_name = tgui_input_text(new_pai, "Choose your character's name", "Character Name")
@@ -152,90 +132,90 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 			<head>
 				<style>
 					body {
-					    margin-top:5px;
-					    font-family:Verdana;
-					    color:white;
-					    font-size:13px;
-					    background-image:url('uiBackground.png');
-					    background-repeat:repeat-x;
-					    background-color:#272727;
+						margin-top:5px;
+						font-family:Verdana;
+						color:white;
+						font-size:13px;
+						background-image:url('uiBackground.png');
+						background-repeat:repeat-x;
+						background-color:#272727;
 						background-position:center top;
 					}
 					table {
-					    font-size:13px;
-					    margin-left:-2px;
+						font-size:13px;
+						margin-left:-2px;
 					}
 					table.request {
-					    border-collapse:collapse;
+						border-collapse:collapse;
 					}
 					table.desc {
-					    border-collapse:collapse;
-					    font-size:13px;
-					    border: 1px solid #161616;
-					    width:100%;
+						border-collapse:collapse;
+						font-size:13px;
+						border: 1px solid #161616;
+						width:100%;
 					}
 					table.download {
-					    border-collapse:collapse;
-					    font-size:13px;
-					    border: 1px solid #161616;
-					    width:100%;
+						border-collapse:collapse;
+						font-size:13px;
+						border: 1px solid #161616;
+						width:100%;
 					}
 					tr.d0 td, tr.d0 th {
-					    background-color: #506070;
-					    color: white;
+						background-color: #506070;
+						color: white;
 					}
 					tr.d1 td, tr.d1 th {
-					    background-color: #708090;
-					    color: white;
+						background-color: #708090;
+						color: white;
 					}
 					tr.d2 td {
-					    background-color: #00FF00;
-					    color: white;
-					    text-align:center;
+						background-color: #00FF00;
+						color: white;
+						text-align:center;
 					}
 					td.button {
-					    border: 1px solid #161616;
-					    background-color: #40628a;
+						border: 1px solid #161616;
+						background-color: #40628a;
 					}
 					td.button {
-					    border: 1px solid #161616;
-					    background-color: #40628a;
-					    text-align: center;
+						border: 1px solid #161616;
+						background-color: #40628a;
+						text-align: center;
 					}
 					td.button_red {
-					    border: 1px solid #161616;
-					    background-color: #B04040;
-					    text-align: center;
+						border: 1px solid #161616;
+						background-color: #B04040;
+						text-align: center;
 					}
 					td.download {
-					    border: 1px solid #161616;
-					    background-color: #40628a;
-					    text-align: center;
+						border: 1px solid #161616;
+						background-color: #40628a;
+						text-align: center;
 					}
 					th {
-					    text-align:left;
-					    width:125px;
+						text-align:left;
+						width:125px;
 					}
 					td.request {
-					    width:140px;
-					    vertical-align:top;
+						width:140px;
+						vertical-align:top;
 					}
 					td.radio {
-					    width:90px;
-					    vertical-align:top;
+						width:90px;
+						vertical-align:top;
 					}
 					td.request {
-					    vertical-align:top;
+						vertical-align:top;
 					}
 					a {
-					    color:#4477E0;
+						color:#4477E0;
 					}
 					a.button {
-					    color:white;
-					    text-decoration: none;
+						color:white;
+						text-decoration: none;
 					}
 					h2 {
-					    font-size:15px;
+						font-size:15px;
 					}
 				</style>
 			</head>
@@ -330,7 +310,7 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 		else
 			dat += {"
 				"} + span_bold("<font size='3px'>pAI Request Module</font>") + {"<br><br>
-			    <p>No personality is installed.</p>
+				<p>No personality is installed.</p>
 				<table>
 					<tr>
 						<td class="button"><a href='byond://?src=\ref[src];request=1' class="button">Request personality</a>
@@ -520,7 +500,7 @@ GLOBAL_LIST_BOILERPLATE(all_pai_cards, /obj/item/paicard)
 	channels = list()
 
 	for(var/internal_chan in internal_channels)
-		var/ch_name = radio_channels_by_freq[internal_chan]
+		var/ch_name = GLOB.radio_channels_by_freq[internal_chan]
 		if(has_channel_access(card.pai, internal_chan))
 			channels += ch_name
 			channels[ch_name] = 1

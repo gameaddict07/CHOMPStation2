@@ -1,5 +1,5 @@
 /obj/structure/ghost_pod/proc/reset_ghostpod()	//Makes the ghost pod usable again and re-adds it to the active ghost pod list if it is not on it.
-	active_ghost_pods |= src
+	GLOB.active_ghost_pods |= src
 	used = FALSE
 	busy = FALSE
 
@@ -15,13 +15,14 @@
 	invisibility = INVISIBILITY_OBSERVER
 	spawn_active = TRUE
 	var/announce_prob = 35
+	/* // CHOMPRemove Start.
 	var/list/possible_mobs = list("Rabbit" = /mob/living/simple_mob/vore/rabbit,
 								  "Red Panda" = /mob/living/simple_mob/vore/redpanda,
 								  "Fennec" = /mob/living/simple_mob/vore/fennec,
 								  "Fennix" = /mob/living/simple_mob/vore/fennix,
 								  "Fox" = /mob/living/simple_mob/animal/passive/fox,//CHOMPedit: more mobs
 								  "Syndi-Fox" = /mob/living/simple_mob/animal/passive/fox/syndicate,//CHOMPedit: more mobs
-								  "Raccoon" = /mob/living/simple_mob/animal/passive/raccoon_ch,//CHOMPedit: more mobs
+								  "Raccoon" = /mob/living/simple_mob/animal/passive/raccoon,//CHOMPedit: more mobs
 								  "Cat" = /mob/living/simple_mob/animal/passive/cat,//CHOMPedit: more mobs
 								  "Space Bumblebee" = /mob/living/simple_mob/vore/bee,
 								  "Space Bear" = /mob/living/simple_mob/animal/space/bear,
@@ -88,6 +89,8 @@
 								  "Statue of Temptation" = /mob/living/simple_mob/vore/devil
 								  )
 
+	*/ //CHOMPRemove End
+
 /obj/structure/ghost_pod/ghost_activated/maintpred/create_occupant(var/mob/M)
 	..()
 	var/choice
@@ -99,11 +102,11 @@
 		return
 
 	//No OOC notes
-	if (not_has_ooc_text(M))
+	if(not_has_ooc_text(M))
 		return
 
 	while(finalized != "Yes" && M.client)
-		choice = tgui_input_list(M, "What type of predator do you want to play as?", "Maintpred Choice", possible_mobs)
+		choice = tgui_input_list(M, "What type of predator do you want to play as?", "Maintpred Choice", GLOB.maint_mob_pred_options) //CHOMPStation Edit
 		if(!choice)	//We probably pushed the cancel button on the mob selection. Let's just put the ghost pod back in the list.
 			to_chat(M, span_notice("No mob selected, cancelling."))
 			reset_ghostpod()
@@ -116,7 +119,7 @@
 		reset_ghostpod()
 		return
 
-	var/mobtype = possible_mobs[choice]
+	var/mobtype = GLOB.maint_mob_pred_options[choice] //CHOMPStation Edit
 	var/mob/living/simple_mob/newPred = new mobtype(get_turf(src))
 	qdel(newPred.ai_holder)
 	newPred.ai_holder = null
@@ -187,10 +190,9 @@
 	icon_state = "redgate_hole"
 	icon_state_opened = "redgate_hole"
 
-/obj/structure/ghost_pod/ghost_activated/maintpred/redgate/Initialize()
+/obj/structure/ghost_pod/ghost_activated/maintpred/redgate/Initialize(mapload)
 	. = ..()
-	if(!(src in active_ghost_pods))
-		active_ghost_pods += src
+	GLOB.active_ghost_pods += src
 
 /obj/structure/ghost_pod/ghost_activated/maint_lurker
 	name = "strange maintenance hole"
@@ -203,6 +205,7 @@
 	anchored = TRUE
 	invisibility = INVISIBILITY_OBSERVER
 	spawn_active = TRUE
+	var/redgate_restricted = FALSE
 
 //override the standard attack_ghost proc for custom messages
 /obj/structure/ghost_pod/ghost_activated/maint_lurker/attack_ghost(var/mob/observer/dead/user)
@@ -211,7 +214,7 @@
 		return
 
 	//No whitelist
-	if(!is_alien_whitelisted(user, GLOB.all_species[user.client.prefs.species]))
+	if(!is_alien_whitelisted(user.client, GLOB.all_species[user.client.prefs.species]))
 		to_chat(user, span_warning("You cannot use this spawnpoint to spawn as a species you are not whitelisted for!"))
 		return
 
@@ -222,7 +225,7 @@
 
 	var/choice = tgui_alert(user, "Using this spawner will spawn you as your currently loaded character slot in a special role. It should not be used with characters you regularly play on station. Are you absolutely sure you wish to continue?", "Stowaway Spawner", list("Yes", "No")) // CHOMPEdit
 
-	if(!choice || choice == "No")
+	if(choice != "Yes")
 		return
 
 	create_occupant(user)
@@ -243,6 +246,7 @@
 	M.client.prefs.copy_to(new_character)
 	new_character.dna.ResetUIFrom(new_character)
 	new_character.sync_organ_dna()
+	new_character.sync_addictions()
 	new_character.key = M.key
 	new_character.mind.loaded_from_ckey = picked_ckey
 	new_character.mind.loaded_from_slot = picked_slot
@@ -252,21 +256,54 @@
 	for(var/lang in new_character.client.prefs.alternate_languages)
 		var/datum/language/chosen_language = GLOB.all_languages[lang]
 		if(chosen_language)
-			if(is_lang_whitelisted(src,chosen_language) || (new_character.species && (chosen_language.name in new_character.species.secondary_langs)))
+			if(is_lang_whitelisted(M, chosen_language) || (new_character.species && (chosen_language.name in new_character.species.secondary_langs)))
 				new_character.add_language(lang)
+
+	SEND_SIGNAL(new_character, COMSIG_HUMAN_DNA_FINALIZED)
 
 	new_character.regenerate_icons()
 
 	new_character.update_transform()
-
-	to_chat(new_character, span_notice("You are a " + span_bold(JOB_MAINT_LURKER) + ", a loose end... you have no special advantages compared to the rest of the crew, so be cautious! You have spawned with an ID that will allow you free access to maintenance areas along with any of your chosen loadout items that are not role restricted, and can make use of anything you can find in maintenance."))
+	if(redgate_restricted)
+		new_character.redgate_restricted = TRUE
+		to_chat(new_character, span_notice("You are an inhabitant of this redgate location, you have no special advantages compared to the rest of the crew, so be cautious! You have spawned with an ID that will allow you free access to basic doors along with any of your chosen loadout items that are not role restricted, and can make use of anything you can find in the redgate map."))
+	else
+		to_chat(new_character, span_notice("You are a " + span_bold(JOB_MAINT_LURKER) + ", a loose end... you have no special advantages compared to the rest of the crew, so be cautious! You have spawned with an ID that will allow you free access to maintenance areas along with any of your chosen loadout items that are not role restricted, and can make use of anything you can find in maintenance."))
 	to_chat(new_character, span_critical("Please be advised, this role is " + span_bold("NOT AN ANTAGONIST.")))
 	to_chat(new_character, span_notice("Whoever or whatever your chosen character slot is, your role is to facilitate roleplay focused around that character; this role is not free license to attack and murder people without provocation or explicit out-of-character consent. You should probably be cautious around high-traffic and highly sensitive areas (e.g. Telecomms) as Security personnel would be well within their rights to treat you as a trespasser. That said, good luck!"))
 
 	new_character.visible_message(span_warning("[new_character] appears to crawl out of somewhere."))
 	qdel(src)
 
-/obj/structure/ghost_pod/ghost_activated/maint_lurker/Initialize()
+/obj/structure/ghost_pod/ghost_activated/maint_lurker/Initialize(mapload)
 	. = ..()
-	if(!(src in active_ghost_pods))
-		active_ghost_pods += src
+	GLOB.active_ghost_pods += src
+
+/// redspace variant
+
+/obj/structure/ghost_pod/ghost_activated/maint_lurker/redgate
+	name = "Redspace inhabitant hole"
+	desc = "A starting location for characters who exist inside of the redgate!"
+	redgate_restricted = TRUE
+
+/obj/structure/ghost_pod/ghost_activated/maint_lurker/redgate/attack_ghost(var/mob/observer/dead/user)
+	if(jobban_isbanned(user, JOB_GHOSTROLES))
+		to_chat(user, span_warning("You cannot use this spawnpoint because you are banned from playing ghost roles."))
+		return
+
+	//No whitelist
+	if(!is_alien_whitelisted(user.client, GLOB.all_species[user.client.prefs.species]))
+		to_chat(user, span_warning("You cannot use this spawnpoint to spawn as a species you are not whitelisted for!"))
+		return
+
+	//No OOC notes/FT
+	if(not_has_ooc_text(user))
+		//to_chat(user, span_warning("You must have proper out-of-character notes and flavor text configured for your current character slot to use this spawnpoint."))
+		return
+
+	var/choice = tgui_alert(user, "Using this spawner will spawn you as your currently loaded character slot in a special role. It should be a character who has a suitable reason for existing within this redspace location. You will not be able to leave through the redgate until another character grants you permission by clicking on the redgate with you nearby. Are you absolutely sure you wish to continue?", "Redspace Inhabitant Spawner", list("Yes", "No"))
+
+	if(choice != "Yes")
+		return
+
+	create_occupant(user)

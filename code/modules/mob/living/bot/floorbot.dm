@@ -113,7 +113,7 @@
 		addTiles(1)
 
 	if(vocal && prob(1))
-		custom_emote(2, "makes an excited beeping sound!")
+		automatic_custom_emote(AUDIBLE_MESSAGE, "makes an excited beeping sound!")
 		playsound(src, 'sound/machines/twobeep.ogg', 50, 0)
 
 /mob/living/bot/floorbot/handleAdjacentTarget()
@@ -220,7 +220,7 @@
 		target = null
 		busy = 0
 		update_icons()
-	else if(istype(A, /turf/space) || istype(A, /turf/simulated/mineral/floor))
+	else if(isopenturf(A) || istype(A, /turf/simulated/mineral/floor))
 		var/building = 2
 		if(locate(/obj/structure/lattice, A))
 			building = 1

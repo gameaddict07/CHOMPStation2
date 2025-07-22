@@ -241,7 +241,7 @@
 	name = "Teshari labcoat"
 	desc = "A small suit that protects against minor chemical spills. This one is a good fit on Teshari."
 	icon = 'icons/inventory/suit/item_teshari.dmi'
-	icon_state = "tesh_labcoat"
+	icon_state = "labcoat"
 	species_restricted = list(SPECIES_TESHARI)
 
 /obj/item/clothing/suit/storage/toggle/tesharicoat
@@ -271,7 +271,7 @@
 	flags_inv = HIDEHOLSTER|HIDETIE
 	actions_types = list(/datum/action/item_action/toggle_hood)
 	hoodtype = /obj/item/clothing/head/tesh_hood
-	allowed = list (/obj/item/pen, /obj/item/paper, /obj/item/flashlight,/obj/item/tank/emergency/oxygen, /obj/item/storage/fancy/cigarettes, /obj/item/storage/box/matches, /obj/item/reagent_containers/food/drinks/flask)
+	allowed = list(POCKET_GENERIC, POCKET_EMERGENCY)
 	species_restricted = list(SPECIES_TESHARI)
 
 /obj/item/clothing/head/tesh_hood

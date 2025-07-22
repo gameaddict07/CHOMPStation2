@@ -39,19 +39,25 @@ export const NtosFileManager = (props) => {
       <NtosWindow.Content scrollable>
         {(filename && (
           <Section
-            title={'Viewing File ' + filename}
+            title={`Viewing File ${filename}`}
             buttons={
-              <>
-                <Button icon="pen" onClick={() => act('PRG_edit')}>
-                  Edit
-                </Button>
-                <Button icon="print" onClick={() => act('PRG_printfile')}>
-                  Print
-                </Button>
-                <Button icon="times" onClick={() => act('PRG_closefile')}>
-                  Close
-                </Button>
-              </>
+              <Stack>
+                <Stack.Item>
+                  <Button icon="pen" onClick={() => act('PRG_edit')}>
+                    Edit
+                  </Button>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="print" onClick={() => act('PRG_printfile')}>
+                    Print
+                  </Button>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button icon="times" onClick={() => act('PRG_closefile')}>
+                    Close
+                  </Button>
+                </Stack.Item>
+              </Stack>
             }
           >
             {/* This dangerouslySetInnerHTML is only ever passed data that has passed through pencode2html
@@ -65,16 +71,18 @@ export const NtosFileManager = (props) => {
               <FileTable
                 files={files}
                 usbconnected={usbconnected}
-                onUpload={(file: file) => act('PRG_copytousb', { uid: file })}
-                onDelete={(file: file) => act('PRG_deletefile', { uid: file })}
-                onOpen={(file: file) => act('PRG_openfile', { uid: file })}
-                onRename={(file: file, newName: string) =>
+                onUpload={(file: number) => act('PRG_copytousb', { uid: file })}
+                onDelete={(file: number) =>
+                  act('PRG_deletefile', { uid: file })
+                }
+                onOpen={(file: number) => act('PRG_openfile', { uid: file })}
+                onRename={(file: number, newName: string) =>
                   act('PRG_rename', {
                     uid: file,
                     new_name: newName,
                   })
                 }
-                onDuplicate={(file: file) => act('PRG_clone', { uid: file })}
+                onDuplicate={(file: number) => act('PRG_clone', { uid: file })}
               />
             </Section>
             {(usbconnected && (
@@ -83,20 +91,22 @@ export const NtosFileManager = (props) => {
                   usbmode
                   files={usbfiles}
                   usbconnected={usbconnected}
-                  onUpload={(file: file) =>
+                  onUpload={(file: number) =>
                     act('PRG_copyfromusb', { uid: file })
                   }
-                  onDelete={(file: file) =>
+                  onDelete={(file: number) =>
                     act('PRG_deletefile', { uid: file })
                   }
-                  onOpen={(file: file) => act('PRG_openfile', { uid: file })}
-                  onRename={(file: file, newName: string) =>
+                  onOpen={(file: number) => act('PRG_openfile', { uid: file })}
+                  onRename={(file: number, newName: string) =>
                     act('PRG_rename', {
                       uid: file,
                       new_name: newName,
                     })
                   }
-                  onDuplicate={(file: file) => act('PRG_clone', { uid: file })}
+                  onDuplicate={(file: number) =>
+                    act('PRG_clone', { uid: file })
+                  }
                 />
               </Section>
             )) ||
@@ -134,11 +144,11 @@ const FileTable = (props: {
   files: file[];
   usbconnected: BooleanLike;
   usbmode?: boolean;
-  onUpload: Function;
-  onDelete: Function;
-  onRename: Function;
-  onOpen: Function;
-  onDuplicate: Function;
+  onUpload: (file: number) => void;
+  onDelete: (file: number) => void;
+  onRename: (file: number, newName: string) => void;
+  onOpen: (file: number) => void;
+  onDuplicate: (file: number) => void;
 }) => {
   const {
     files = [],
@@ -164,12 +174,11 @@ const FileTable = (props: {
               <>
                 <Button.Input
                   width="80%"
-                  currentValue={file.name}
+                  buttonText={file.name}
+                  value={file.name}
                   tooltip="Rename"
-                  onCommit={(e, value) => onRename(file.uid, value)}
-                >
-                  {file.name}
-                </Button.Input>
+                  onCommit={(value) => onRename(file.uid, value)}
+                />
                 <Button onClick={() => onOpen(file.uid)}>Open</Button>
               </>
             ) : (

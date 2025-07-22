@@ -28,7 +28,8 @@ GLOBAL_LIST_BOILERPLATE(all_debugging_effects, /obj/effect/debugging)
 	icon = 'icons/480x480.dmi'
 	icon_state = "25percent"
 
-/obj/effect/debugging/camera_range/New()
+/obj/effect/debugging/camera_range/Initialize(mapload, ...)
+	. = ..()
 	src.pixel_x = -224
 	src.pixel_y = -224
 
@@ -77,7 +78,7 @@ GLOBAL_LIST_BOILERPLATE(all_debugging_effects, /obj/effect/debugging)
 	for(var/obj/machinery/camera/C in cameranet.cameras)
 		CL += C
 
-	var/output = {""} + span_bold("CAMERA ANNOMALITIES REPORT") + {"<HR>
+	var/output = span_bold("CAMERA ANNOMALITIES REPORT") + {"<HR>
 "} + span_bold("The following annomalities have been detected. The ones in red need immediate attention: Some of those in black may be intentional.") + {"<BR><ul>"}
 
 	for(var/obj/machinery/camera/C1 in CL)
@@ -101,7 +102,10 @@ GLOBAL_LIST_BOILERPLATE(all_debugging_effects, /obj/effect/debugging)
 					output += "<li>" + span_red("Camera not connected to wall at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) Network: [C1.network]") + "</li>"
 
 	output += "</ul>"
-	usr << browse("<html>[output]</html>","window=airreport;size=1000x500")
+
+	var/datum/browser/popup = new(src, "airreport", "Airreport", 1000, 500)
+	popup.set_content(output)
+	popup.open()
 	feedback_add_details("admin_verb","mCRP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/intercom_view()
@@ -117,7 +121,7 @@ GLOBAL_LIST_BOILERPLATE(all_debugging_effects, /obj/effect/debugging)
 		qdel(M)
 
 	if(intercom_range_display_status)
-		for(var/obj/item/radio/intercom/I in machines)
+		for(var/obj/item/radio/intercom/I in GLOB.machines)
 			for(var/turf/T in orange(7,I))
 				var/obj/effect/debugging/marker/F = new/obj/effect/debugging/marker(T)
 				if (!(F in view(7,I.loc)))
@@ -125,35 +129,33 @@ GLOBAL_LIST_BOILERPLATE(all_debugging_effects, /obj/effect/debugging)
 	feedback_add_details("admin_verb","mIRD") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 var/list/debug_verbs = list (
-        /client/proc/do_not_use_these
-        ,/client/proc/camera_view
-        ,/client/proc/sec_camera_report
-        ,/client/proc/intercom_view
-        ,/client/proc/Cell
-        ,/client/proc/atmosscan
-        ,/client/proc/powerdebug
-        ,/client/proc/count_objects_on_z_level
-        ,/client/proc/count_objects_all
-        ,/client/proc/cmd_assume_direct_control
-        ,/client/proc/jump_to_dead_group
-        ,/client/proc/startSinglo
-        ,/client/proc/set_server_fps
-        ,/client/proc/cmd_admin_grantfullaccess
-        ,/client/proc/kaboom
-        ,/client/proc/cmd_admin_areatest
-        ,/client/proc/cmd_admin_rejuvenate
-        ,/datum/admins/proc/show_traitor_panel
-        ,/client/proc/print_jobban_old
-        ,/client/proc/print_jobban_old_filter
-        ,/client/proc/forceEvent
-        ,/client/proc/Zone_Info
-        ,/client/proc/Test_ZAS_Connection
-        ,/client/proc/ZoneTick
-        ,/client/proc/rebootAirMaster
-        ,/client/proc/hide_debug_verbs
-        ,/client/proc/testZAScolors
-        ,/client/proc/testZAScolors_remove
-        ,/datum/admins/proc/setup_supermatter
+		/client/proc/do_not_use_these
+		,/client/proc/camera_view
+		,/client/proc/sec_camera_report
+		,/client/proc/intercom_view
+		,/client/proc/Cell
+		,/client/proc/atmosscan
+		,/client/proc/powerdebug
+		,/client/proc/count_objects_on_z_level
+		,/client/proc/count_objects_all
+		,/client/proc/jump_to_dead_group
+		,/client/proc/startSinglo
+		,/client/proc/cmd_admin_grantfullaccess
+		,/client/proc/kaboom
+		,/client/proc/cmd_admin_areatest
+		,/client/proc/cmd_admin_rejuvenate
+		,/datum/admins/proc/show_traitor_panel
+		,/client/proc/print_jobban_old
+		,/client/proc/print_jobban_old_filter
+		,/client/proc/forceEvent
+		,/client/proc/Zone_Info
+		,/client/proc/Test_ZAS_Connection
+		,/client/proc/ZoneTick
+		,/client/proc/rebootAirMaster
+		,/client/proc/hide_debug_verbs
+		,/client/proc/testZAScolors
+		,/client/proc/testZAScolors_remove
+		,/datum/admins/proc/setup_supermatter
 		,/client/proc/atmos_toggle_debug
 		,/client/proc/spawn_tanktransferbomb
 		,/client/proc/take_picture

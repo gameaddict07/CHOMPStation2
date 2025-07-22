@@ -4,7 +4,7 @@ import { NtosWindow } from 'tgui/layouts';
 import { Box, Button, Section, Table } from 'tgui-core/components';
 import type { BooleanLike } from 'tgui-core/react';
 
-import { file } from './NtosFileManager';
+import type { file } from './NtosFileManager';
 
 type Data = {
   PC_device_theme: string;
@@ -75,7 +75,7 @@ export const NtosWordProcessor = (props) => {
               </Section>
             </Section>
           )) || (
-            <Section title={'Document: ' + filename}>
+            <Section title={`Document: ${filename}`}>
               <Box>
                 <Button onClick={() => act('PRG_newfile')}>New</Button>
                 <Button onClick={() => act('PRG_loadmenu')}>Load</Button>

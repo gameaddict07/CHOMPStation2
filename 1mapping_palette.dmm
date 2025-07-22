@@ -601,13 +601,13 @@
 "axP" = (
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "ursula";
 	name = "exterior access button";
 	pixel_y = 26
 	},
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula_outer";
 	locked = 1;
 	name = "External Access"
@@ -1620,7 +1620,7 @@
 /obj/machinery/light,
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -3751,7 +3751,7 @@
 /turf/simulated/floor/outdoors/dirt,
 /area/space)
 "cAO" = (
-/obj/machinery/exonet_node/map,
+/obj/machinery/exonet_node,
 /turf/simulated/floor/tiled/asteroid_steel,
 /area/space)
 "cBF" = (
@@ -5026,7 +5026,7 @@
 "dqR" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna_pump"
 	},
 /obj/effect/floor_decal/industrial/warning{
@@ -5034,7 +5034,7 @@
 	},
 /obj/structure/closet/walllocker_double/hydrant/south,
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna_sensor";
 	pixel_x = -25;
 	pixel_y = -1
@@ -5736,9 +5736,6 @@
 /area/space)
 "dRK" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/map_effect/interval/sound_emitter/ballistic_gunfight,
 /turf/simulated/floor/outdoors/dirt,
 /area/space)
@@ -5984,7 +5981,7 @@
 	pixel_y = 5
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -6142,7 +6139,7 @@
 /obj/machinery/light,
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -6232,14 +6229,14 @@
 /area/space)
 "ekn" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "needle_outer";
 	locked = 1;
 	name = "External Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "needle";
 	name = "exterior access button";
 	pixel_y = 26
@@ -6355,14 +6352,6 @@
 	name = "Spill of fear"
 	},
 /turf/simulated/floor/gorefloor,
-/area/space)
-"epX" = (
-/obj/effect/alien/weeds,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/outdoors/rocks{
-	outdoors = 0
-	},
 /area/space)
 "eqm" = (
 /obj/structure/window/titanium/full,
@@ -6633,11 +6622,11 @@
 /area/space)
 "eBD" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "needle_pump"
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "needle";
 	pixel_y = 26;
 	tag_airpump = "needle_pump";
@@ -7380,7 +7369,7 @@
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -8160,7 +8149,7 @@
 	dir = 9
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula";
 	pixel_y = 26;
 	tag_airpump = "ursula_pump";
@@ -8470,14 +8459,14 @@
 /area/space)
 "fVq" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula_inner";
 	locked = 1;
 	name = "Internal Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "ursula";
 	name = "interior access button";
 	pixel_y = 26
@@ -9680,7 +9669,7 @@
 /obj/structure/closet/emcloset,
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -10187,7 +10176,7 @@
 "gZZ" = (
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "echidna";
 	name = "interior access button";
 	pixel_y = 26
@@ -11886,7 +11875,7 @@
 "ifn" = (
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "echidna";
 	name = "exterior access button";
 	pixel_y = 26
@@ -12001,14 +11990,14 @@
 "ikc" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella_pump"
 	},
 /obj/effect/floor_decal/industrial/warning{
 	dir = 6
 	},
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella_sensor";
 	pixel_y = -28
 	},
@@ -12424,13 +12413,13 @@
 /area/space)
 "iwA" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_inner";
 	name = "Internal Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "stargazer";
 	name = "interior access button";
 	pixel_y = -26
@@ -12458,11 +12447,6 @@
 	dir = 1
 	},
 /turf/simulated/shuttle/floor/white,
-/area/space)
-"ixh" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/wood,
 /area/space)
 "ixo" = (
 /obj/structure/grille/cult{
@@ -12603,7 +12587,7 @@
 /obj/structure/closet/emcloset,
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -12920,11 +12904,6 @@
 	},
 /turf/simulated/floor/reinforced,
 /area/space)
-"iKm" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/tiled/white,
-/area/space)
 "iKL" = (
 /obj/machinery/door/airlock/maintenance/command,
 /turf/simulated/floor/outdoors/dirt,
@@ -13017,7 +12996,6 @@
 /area/space)
 "iPZ" = (
 /obj/item/clothing/suit/storage/apron/white,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/tiled/white,
 /area/space)
@@ -13529,11 +13507,11 @@
 /area/space)
 "jfi" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella_pump"
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella";
 	pixel_y = 26;
 	tag_airpump = "estrella_pump";
@@ -14384,12 +14362,12 @@
 	dir = 5
 	},
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_sensor";
 	pixel_y = 28
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -14968,7 +14946,7 @@
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -15245,14 +15223,14 @@
 /area/space)
 "kkQ" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_outer";
 	locked = 1;
 	name = "External Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "baby_mammoth";
 	name = "exterior access button";
 	pixel_y = 26
@@ -18537,11 +18515,6 @@
 /obj/structure/flora/ausbushes/ywflowers,
 /turf/simulated/floor/grass,
 /area/space)
-"mvi" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/carpet/sblucarpet,
-/area/space)
 "mvE" = (
 /obj/machinery/light{
 	dir = 4
@@ -19231,7 +19204,7 @@
 /obj/machinery/atmospherics/pipe/simple/hidden,
 /obj/machinery/meter,
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "ursula_sensor";
 	pixel_y = 28
 	},
@@ -19529,7 +19502,7 @@
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -19787,7 +19760,7 @@
 "nbU" = (
 /obj/machinery/door/airlock/multi_tile/metal/mait{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	icon_state = "door_locked";
 	id_tag = "estrella_inner";
 	locked = 1;
@@ -20611,7 +20584,6 @@
 	pixel_x = 5;
 	pixel_y = 10
 	},
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/wood,
 /area/space)
@@ -21792,12 +21764,6 @@
 	},
 /turf/simulated/shuttle/floor/alienplating,
 /area/space)
-"oEe" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/wood/broken,
-/area/space)
 "oEo" = (
 /obj/structure/bed/double/padded,
 /turf/simulated/floor/wood/sif/broken,
@@ -21854,14 +21820,14 @@
 /area/space)
 "oGr" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_pump"
 	},
 /obj/effect/floor_decal/industrial/warning{
 	dir = 9
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_shuttle";
 	pixel_y = 26;
 	tag_airpump = "baby_mammoth_pump";
@@ -22645,8 +22611,6 @@
 /turf/simulated/shuttle/wall/alien/blue/hard_corner,
 /area/space)
 "pfu" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/outdoors/dirt,
 /area/space)
@@ -23834,11 +23798,6 @@
 	id = "atriumeast"
 	},
 /turf/simulated/shuttle/floor/voidcraft,
-/area/space)
-"pRG" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/wood/broken,
 /area/space)
 "pSg" = (
 /obj/effect/blocker,
@@ -25422,7 +25381,7 @@
 /obj/machinery/atmospherics/pipe/simple/visible,
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "estrella";
 	name = "interior access button";
 	pixel_y = 26
@@ -25877,7 +25836,6 @@
 "rgx" = (
 /obj/effect/alien/weeds,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/random/junk,
 /turf/simulated/floor/outdoors/dirt{
 	outdoors = 0
@@ -26103,8 +26061,6 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/wood,
 /area/space)
@@ -26857,7 +26813,7 @@
 	dir = 9
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer";
 	pixel_y = 26;
 	tag_airpump = "stargazer_pump";
@@ -26866,7 +26822,7 @@
 	tag_interior_door = "stargazer_inner"
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -26933,7 +26889,6 @@
 /area/space)
 "rUy" = (
 /obj/structure/simple_door/resin,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/outdoors/dirt{
 	outdoors = 0
@@ -27493,7 +27448,6 @@
 /area/space)
 "sjH" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /mob/living/simple_mob/humanoid/merc/ranged{
 	health = 15;
 	maxHealth = 15
@@ -27590,7 +27544,7 @@
 "snv" = (
 /obj/machinery/door/airlock/multi_tile/metal/mait{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	icon_state = "door_locked";
 	id_tag = "estrella_outer";
 	locked = 1;
@@ -27698,13 +27652,13 @@
 /area/space)
 "srZ" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "stargazer_outer";
 	name = "External Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "stargazer";
 	name = "exterior access button";
 	pixel_y = 26
@@ -28129,7 +28083,6 @@
 "sHj" = (
 /obj/item/pack/cardemon,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/carpet/bcarpet,
 /area/space)
 "sHK" = (
@@ -28294,7 +28247,6 @@
 /area/space)
 "sPn" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/item/paper{
 	info = "Seems to be filled with odd runes drawn with blood";
 	name = "Blood stained paper"
@@ -28366,12 +28318,6 @@
 	amount = 25
 	},
 /turf/simulated/floor/plating,
-/area/space)
-"sRs" = (
-/obj/random/trash,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/carpet/sblucarpet,
 /area/space)
 "sRL" = (
 /obj/structure/prop/alien/pod,
@@ -28682,7 +28628,7 @@
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
 	dir = 1;
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_pump"
 	},
 /obj/machinery/light,
@@ -28966,7 +28912,7 @@
 /turf/simulated/floor/reinforced,
 /area/space)
 "tjy" = (
-/obj/machinery/exonet_node/map,
+/obj/machinery/exonet_node,
 /turf/simulated/floor/outdoors/dirt,
 /area/space)
 "tjB" = (
@@ -29804,7 +29750,6 @@
 "tMW" = (
 /obj/effect/alien/weeds,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /mob/living/simple_mob/humanoid/merc/melee/sword/poi{
 	health = 15;
 	maxHealth = 15
@@ -29875,7 +29820,7 @@
 /obj/effect/floor_decal/industrial/warning/cee,
 /obj/machinery/light,
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "needle_sensor";
 	pixel_x = -28;
 	pixel_y = -1
@@ -30111,14 +30056,6 @@
 	},
 /turf/simulated/shuttle/plating/airless/carry,
 /area/space)
-"tTw" = (
-/obj/effect/alien/weeds,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/outdoors/dirt{
-	outdoors = 0
-	},
-/area/space)
 "tTG" = (
 /obj/item/storage/firstaid,
 /turf/simulated/floor/outdoors/dirt,
@@ -30199,7 +30136,7 @@
 	dir = 9
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "estrella_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -30804,8 +30741,6 @@
 /area/space)
 "urd" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/carpet/bcarpet,
 /area/space)
 "usi" = (
@@ -30918,11 +30853,11 @@
 /area/space)
 "uwY" = (
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna_pump"
 	},
 /obj/machinery/embedded_controller/radio/airlock/docking_port{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "echidna";
 	pixel_y = 26;
 	tag_airpump = "echidna_pump";
@@ -30965,7 +30900,7 @@
 "uze" = (
 /obj/machinery/access_button{
 	command = "cycle_exterior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "estrella";
 	name = "exterior access button";
 	pixel_y = 26
@@ -31805,8 +31740,6 @@
 /area/space)
 "vbb" = (
 /obj/effect/alien/weeds/node,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/outdoors/dirt{
 	outdoors = 0
@@ -32939,12 +32872,12 @@
 	dir = 5
 	},
 /obj/machinery/airlock_sensor{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_sensor";
 	pixel_y = 28
 	},
 /obj/machinery/atmospherics/unary/vent_pump/high_volume{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_pump"
 	},
 /turf/simulated/shuttle/plating,
@@ -34014,14 +33947,14 @@
 /area/space)
 "wFw" = (
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "needle_inner";
 	locked = 1;
 	name = "Internal Access"
 	},
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "needle";
 	name = "interior access button";
 	pixel_y = 26
@@ -34586,7 +34519,6 @@
 /area/space)
 "xau" = (
 /obj/effect/alien/weeds/node,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/random/junk,
 /turf/simulated/floor/outdoors/dirt{
@@ -35339,7 +35271,6 @@
 /obj/effect/alien/weeds,
 /obj/effect/alien/weeds,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor/outdoors/rocks{
 	outdoors = 0
 	},
@@ -35639,14 +35570,6 @@
 "xIV" = (
 /obj/structure/fence,
 /turf/simulated/floor/outdoors/grass/heavy,
-/area/space)
-"xJd" = (
-/obj/effect/alien/weeds/node,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor/outdoors/dirt{
-	outdoors = 0
-	},
 /area/space)
 "xJg" = (
 /obj/effect/floor_decal/industrial/hatch/yellow,
@@ -36079,11 +36002,6 @@
 	},
 /turf/simulated/floor/carpet/bcarpet,
 /area/space)
-"xVi" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/turf/simulated/floor,
-/area/space)
 "xVA" = (
 /obj/effect/gibspawner/robot,
 /turf/simulated/floor/outdoors/dirt,
@@ -36147,13 +36065,13 @@
 	},
 /obj/machinery/access_button{
 	command = "cycle_interior";
-	frequency = 1380;
+	frequency = 1381;
 	master_tag = "baby_mammoth";
 	name = "interior access button";
 	pixel_y = 26
 	},
 /obj/machinery/door/airlock/voidcraft/vertical{
-	frequency = 1380;
+	frequency = 1381;
 	id_tag = "baby_mammoth_inner";
 	locked = 1;
 	name = "Internal Access"
@@ -36181,7 +36099,6 @@
 	pixel_y = 2
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor,
 /area/space)
 "xZn" = (
@@ -36192,7 +36109,6 @@
 /obj/machinery/light/small{
 	dir = 4
 	},
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor,
 /area/space)
@@ -36223,7 +36139,6 @@
 /obj/random/junk,
 /obj/random/junk,
 /obj/random/junk,
-/obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /turf/simulated/floor,
 /area/space)
@@ -53460,7 +53375,7 @@ mYY
 mYY
 hIe
 ygs
-ixh
+lmI
 jGl
 lfY
 lfY
@@ -53726,7 +53641,7 @@ fZc
 vHw
 pNG
 rlV
-sRs
+ulT
 lfY
 fZc
 wrW
@@ -53979,7 +53894,7 @@ lMZ
 fZc
 xoj
 llr
-mvi
+lfZ
 lmI
 lMZ
 lmI
@@ -54755,12 +54670,12 @@ hIe
 lmI
 lmI
 nKr
-oEe
-pRG
+ygs
+ygs
 rpj
-ixh
-ixh
-ixh
+lmI
+lmI
+lmI
 ygs
 hIe
 wGN
@@ -55266,7 +55181,7 @@ nwG
 nwG
 vHw
 hXY
-iKm
+iYc
 jUk
 fZc
 myA
@@ -55275,11 +55190,11 @@ oLW
 pUb
 vHw
 sYn
-pRG
+ygs
 hUt
 wtD
 xaO
-xVi
+wtD
 vHw
 wGN
 ssV
@@ -55524,7 +55439,7 @@ nwG
 nwG
 lMZ
 iac
-iKm
+iYc
 jVj
 lmI
 myT
@@ -55537,7 +55452,7 @@ urd
 vHQ
 vHw
 xck
-xVi
+wtD
 vHw
 wGN
 sBp
@@ -71066,7 +70981,7 @@ ybA
 ybA
 ybA
 mza
-tTw
+fal
 xau
 ybA
 ybA
@@ -71323,7 +71238,7 @@ ybA
 ybA
 ybA
 ybA
-epX
+pzv
 xyE
 rtj
 ybA
@@ -72869,7 +72784,7 @@ ybA
 ybA
 ybA
 qxF
-xJd
+vbb
 fal
 ybA
 ybA

@@ -48,7 +48,7 @@
 	breath_heat_level_3 = 800 //lower incineration threshold though
 
 	spawn_flags = SPECIES_CAN_JOIN
-	flags = NO_SCAN | IS_PLANT | NO_MINOR_CUT
+	flags = NO_DNA | NO_SLEEVE | IS_PLANT | NO_MINOR_CUT
 	appearance_flags = HAS_HAIR_COLOR | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR | HAS_EYE_COLOR
 
 	inherent_verbs = list(/mob/living/carbon/human/proc/alraune_fruit_select, //Give them the voremodes related to wrapping people in vines and sapping their fluids
@@ -136,18 +136,18 @@
 	if(H.does_not_breathe)
 		H.failed_last_breath = 0
 		H.adjustOxyLoss(-5)
-		return // if somehow they don't breathe, abort breathing.
+		return ..()// if somehow they don't breathe, abort breathing.
 
 	if(!breath || (breath.total_moles == 0))
 		H.failed_last_breath = 1
-		if(H.health > CONFIG_GET(number/health_threshold_crit))
+		if(H.health > H.get_crit_point())
 			H.adjustOxyLoss(ALRAUNE_MAX_OXYLOSS)
 		else
 			H.adjustOxyLoss(ALRAUNE_CRIT_MAX_OXYLOSS)
 
 		H.throw_alert("pressure", /obj/screen/alert/lowpressure)
 
-		return // skip air processing if there's no air
+		return ..() // skip air processing if there's no air
 	else
 		H.clear_alert("pressure")
 
@@ -306,7 +306,7 @@
 		get_environment_discomfort(src,"cold")
 
 	breath.update_values()
-	return 1
+	..()
 
 /obj/item/organ/internal/brain/alraune
 	icon = 'icons/mob/species/alraune/organs.dmi'

@@ -41,12 +41,14 @@
 /mob/living/simple_mob/vore/mantrap/init_vore()
 	if(!voremob_loaded)
 		return
+	if(LAZYLEN(vore_organs))
+		return
 	. = ..()
 	var/obj/belly/B = vore_selected
 	B.name = "trap"
 	B.desc = "As you step onto the large leaves of the mantrap, they suddenly shoot up and snap shut around you, encasing you in a fleshy-feeling gut. The saw-toothed spikes around the edge of the leaves interlock with one another and exerts a tremendous pressure on your body. Copious volumes of fluids begin to seep in from the walls themselves, rapidly coating your body and pooling around you, all of your movements only seem to speed up this process.."
 	B.mode_flags = DM_FLAG_THICKBELLY
-	B.belly_fullscreen = "destination_tumby"
+	B.belly_fullscreen = "VBO_maw12"
 	B.belly_fullscreen_color = "#02a802"
 	B.digest_brute = 2
 	B.digest_burn = 2
@@ -72,16 +74,15 @@
 /mob/living/simple_mob/vore/mantrap/Crossed(var/atom/movable/AM) // Transplanting this from /mob/living/carbon/human/Crossed()
 	if(AM == src || AM.is_incorporeal()) // We're not going to run over ourselves or ghosts
 		return
+	if(src.stat)
+		return
 	if(isliving(AM))
 		var/mob/living/L = AM
 		if(L in eaten_mobs)
 			return
 		if(L.devourable && L.allowmobvore && (src.vore_fullness < src.vore_capacity))
-			perform_the_nom(src,L,src,src.vore_selected,1)
-			L |= eaten_mobs
-			return
-		else
-			return
+			perform_the_nom(src,L,src,src.vore_selected,-1)
+			eaten_mobs += L
 
 
 ////////////////////////////PITCHER PLANT////////////////////////////////////////////////
@@ -133,12 +134,14 @@
 /mob/living/simple_mob/vore/pitcher/init_vore()
 	if(!voremob_loaded)
 		return
+	if(LAZYLEN(vore_organs))
+		return
 	. = ..()
 	var/obj/belly/B = vore_selected
 	B.name = "stomach"
 	B.desc = "Walking a little too close to the pitcher plant, you trigger its trap mechanism and a tendril shoots out towards you. Wrapping around your body, you are rapidly dragged into the open mouth of the plant, stuffing your entire body into a fleshy, green stomach filled with a pool of some sort of tingling liquid. The lid of the plant slams down over the mouth, making it far more difficult to escape, all whilst that pool steadily seems to be filling up."
 	B.mode_flags = DM_FLAG_THICKBELLY
-	B.belly_fullscreen = "destination_tumby"
+	B.belly_fullscreen = "VBO_belly1"
 	B.belly_fullscreen_color = "#02a802"
 	B.digest_brute = 1
 	B.digest_burn = 1

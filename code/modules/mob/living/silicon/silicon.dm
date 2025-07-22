@@ -29,18 +29,19 @@
 
 	var/hudmode = null
 
-/mob/living/silicon/New()
-	silicon_mob_list |= src
-	..()
-	add_language(LANGUAGE_GALCOM)
-	apply_default_language(GLOB.all_languages[LANGUAGE_GALCOM])
-	init_id()
-	init_subsystems()
+/mob/living/silicon/Initialize(mapload, is_decoy = FALSE)
+	. = ..()
+	GLOB.silicon_mob_list += src
+	if(!is_decoy)
+		add_language(LANGUAGE_GALCOM)
+		apply_default_language(GLOB.all_languages[LANGUAGE_GALCOM])
+		init_id()
+		init_subsystems()
 
-	AddElement(/datum/element/footstep, FOOTSTEP_MOB_SHOE, 1, -6)
+		AddElement(/datum/element/footstep, FOOTSTEP_MOB_SHOE, 1, -6)
 
 /mob/living/silicon/Destroy()
-	silicon_mob_list -= src
+	GLOB.silicon_mob_list -= src
 	for(var/datum/alarm_handler/AH in SSalarm.all_handlers)
 		AH.unregister_alarm(src)
 	return ..()

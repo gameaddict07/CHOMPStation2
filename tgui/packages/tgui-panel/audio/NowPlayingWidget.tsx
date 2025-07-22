@@ -16,9 +16,10 @@ import { toFixed } from 'tgui-core/math';
 
 import { useSettings } from '../settings';
 import { selectAudio } from './selectors';
+import type { AudioState } from './types';
 
 export const NowPlayingWidget = (props) => {
-  const audio = useSelector(selectAudio),
+  const audio: AudioState = useSelector(selectAudio),
     dispatch = useDispatch(),
     settings = useSettings(),
     title = audio.meta?.title,
@@ -27,7 +28,7 @@ export const NowPlayingWidget = (props) => {
     upload_date = audio.meta?.upload_date || 'Unknown Date',
     album = audio.meta?.album || 'Unknown Album',
     duration = audio.meta?.duration,
-    date = !isNaN(upload_date)
+    date = !Number.isNaN(Number(upload_date))
       ? upload_date?.substring(0, 4) +
         '-' +
         upload_date?.substring(4, 6) +
@@ -104,7 +105,7 @@ export const NowPlayingWidget = (props) => {
           value={settings.adminMusicVolume}
           step={0.0025}
           stepPixelSize={1}
-          format={(value) => toFixed(value * 100) + '%'}
+          format={(value) => `${toFixed(value * 100)}%`}
           onDrag={(e, value) =>
             settings.update({
               adminMusicVolume: value,

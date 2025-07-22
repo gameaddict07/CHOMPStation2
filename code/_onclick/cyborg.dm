@@ -56,7 +56,7 @@
 		return
 	*/
 
-	var/obj/item/W = get_active_hand()
+	var/obj/item/W = get_active_hand(A)
 
 	// Cyborgs have no range-checking unless there is item use
 	if(!W)
@@ -73,7 +73,7 @@
 
 		W.attack_self(src)
 		return
-	
+
 	// cyborgs are prohibited from using storage items so we can I think safely remove (A.loc in contents)
 	if(A == loc || (A in loc) || (A in contents))
 		// No adjacency checks

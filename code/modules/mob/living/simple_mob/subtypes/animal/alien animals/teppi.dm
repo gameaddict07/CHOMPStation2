@@ -120,8 +120,6 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 	var/teppi_warned = FALSE
 	var/teppi_mutate = FALSE	//Allows Teppi to get their children's colors scrambled, and possibly other things later on!
 
-	var/teppi_growingup = FALSE // flag to prevent multiple qdels
-
 	attacktext = list("nipped", "chomped", "bonked", "stamped on")
 	attack_sound = 'sound/voice/teppi/roar.ogg' // make a better one idiot
 	friendly = list("snoofs", "nuzzles", "nibbles", "smooshes on")
@@ -170,6 +168,8 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 
 /mob/living/simple_mob/vore/alienanimals/teppi/init_vore()
 	if(!voremob_loaded)
+		return
+	if(LAZYLEN(vore_organs))
 		return
 	. = ..()
 	var/obj/belly/B = vore_selected
@@ -331,7 +331,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 
 ///////////////////////////////////////Other stuff///////////////////////////////////////////
 
-/mob/living/simple_mob/vore/alienanimals/teppi/Initialize()
+/mob/living/simple_mob/vore/alienanimals/teppi/Initialize(mapload)
 	. = ..()
 
 	if(name == initial(name))
@@ -556,7 +556,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 		if(!client && lets_eat(user) && prob(1))
 			visible_message(span_danger("\The [src] scromfs \the [user] along with the food!"))
 			to_chat(user, span_notice("\The [src] leans in close, spreading its jaws in front of you. A hot, humid gust of breath blows over you as the weight of \the [src]'s presses you over, knocking you off of your feet as the warm gooey tough of jaws scromf over your figure, rapidly guzzling you away with the [O], leaving you to tumble down into the depths of its body..."))
-			playsound(src, pick(bodyfall_sound), 75, 1)
+			playsound(src, pick(GLOB.bodyfall_sound), 75, 1)
 			teppi_pounce(user)
 		if(yum && nutrition >= 500)
 			to_chat(user, span_notice("\The [src] seems satisfied."))
@@ -643,7 +643,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 		else if(lets_eat(M) && prob(50))
 			to_chat(M, span_notice("\The [src] grumbles a bit... and then bowls you over, pressing their weight into yours to knock you off of your feet! In a rush of chaotic presses and schlorps, the gooey touch of Teppi flesh grinds over you as you're guzzled away! Casually swallowed down in retaliation for all of the pettings. Pumped down deep into the grumbling depths of \the [src]."))
 			visible_message(span_danger("\The [src] scromfs \the [M], before chuffing and settling down again."))
-			playsound(src, pick(bodyfall_sound), 75, 1)
+			playsound(src, pick(GLOB.bodyfall_sound), 75, 1)
 			teppi_pounce(M)
 			wantpet = 100
 	else
@@ -670,7 +670,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 
 /mob/living/simple_mob/vore/alienanimals/teppi/Life()
 	. =..()
-	if(!.)
+	if(!. || QDELETED(src))
 		return
 	wantpet += rand(0,2) * affection_factor
 	amount_grown += rand(1,5)
@@ -688,11 +688,9 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 		else if (not_hungy)
 			var/nutrition_cost = 500 + (nutrition / 2)
 			adjust_nutrition(-nutrition_cost)
-			new /mob/living/simple_mob/vore/alienanimals/teppi(loc, src)
-			if(!teppi_growingup)
-				teppi_growingup = TRUE
-				qdel(src)
-				return
+			new /mob/living/simple_mob/vore/alienanimals/teppi(loc, store_teppi_data(src))
+			qdel(src)
+			return
 		else
 			visible_message("\The [src] whines pathetically...", runemessage = "whines")
 			if(prob(50))
@@ -737,7 +735,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 		return
 	if(resting)
 		return
-	playsound(src, pick(teppi_sound), 75, 1)
+	playsound(src, pick(GLOB.teppi_sound), 75, 1)
 
 /mob/living/simple_mob/vore/alienanimals/teppi/proc/teppi_shear(var/mob/user as mob, tool)
 	var/sheartime = 3 SECONDS
@@ -767,18 +765,18 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 		return TRUE
 
 //Handles both growing up from a baby and also passing parent details to new babies.
-/mob/living/simple_mob/vore/alienanimals/teppi/New(newloc, teppi1, teppi2)
+/mob/living/simple_mob/vore/alienanimals/teppi/Initialize(mapload, teppi1, teppi2)
 	GLOB.teppi_count ++
 	if(teppi1 && !teppi2)
 		inherit_from_baby(teppi1)
 	else if (teppi1 && teppi2)
 		inherit_from_parents(teppi1, teppi2)
-	..()
+	. = ..()
 
 /mob/living/simple_mob/vore/alienanimals/teppi/Destroy()
 	GLOB.teppi_count --
 	friend_zone = null
-	active_ghost_pods -= src
+	GLOB.active_ghost_pods -= src
 	ai_holder.leader = null
 	return ..()
 
@@ -821,7 +819,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 	ai_holder.set_busy(FALSE)
 
 
-/mob/living/simple_mob/vore/alienanimals/teppi/perform_the_nom(mob/living/user, mob/living/prey, mob/living/pred, obj/belly/belly, delay)
+/mob/living/simple_mob/vore/alienanimals/teppi/perform_the_nom(mob/living/user, mob/living/prey, mob/living/pred, obj/belly/belly, delay_time)
 	if(!pred)
 		pred = user
 	if(client)
@@ -924,26 +922,46 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 /mob/living/simple_mob/vore/alienanimals/teppi/baby/init_vore() //shouldn't need all the vore bidness if they aren't using it as babbies. They get their tummies when they grow up.
 	return
 
+/mob/living/simple_mob/vore/alienanimals/teppi/proc/store_teppi_data(mob/living/simple_mob/vore/alienanimals/teppi/teppi)
+	var/list/teppi_data = list(
+		"dir" = teppi.dir,
+		"name" = teppi.name,
+		"real_name" = teppi.real_name,
+		"faction" = teppi.faction,
+		"affinity" = teppi.affinity,
+		"affection_factor" = teppi.affection_factor,
+		"nutrition" = teppi.nutrition,
+		"allergen_preference" = teppi.allergen_preference,
+		"allergen_unpreference" = teppi.allergen_unpreference,
+		"color" = teppi.color,
+		"marking_color" = teppi.marking_color,
+		"horn_color" = teppi.horn_color,
+		"eye_color" = teppi.eye_color,
+		"skin_color" = teppi.skin_color,
+	)
+
+	return teppi_data
+
 //This sets all the things on adult teppi when they grow from a baby
-/mob/living/simple_mob/vore/alienanimals/teppi/proc/inherit_from_baby(mob/living/simple_mob/vore/alienanimals/teppi/baby/baby)
+/mob/living/simple_mob/vore/alienanimals/teppi/proc/inherit_from_baby(list/teppi_data)
 	inherit_colors = TRUE
 	inherit_allergen = TRUE
-	dir = baby.dir
-	name = baby.name
-	real_name = baby.real_name
-	faction = baby.faction
-	affinity = baby.affinity
-	affection_factor = baby.affection_factor
-	nutrition = baby.nutrition
-	allergen_preference = baby.allergen_preference
-	allergen_unpreference = baby.allergen_unpreference
-	color = baby.color
-	marking_color = baby.marking_color
-	horn_color = baby.horn_color
-	eye_color = baby.eye_color
-	skin_color = baby.skin_color
+	dir = teppi_data["dir"]
+	name = teppi_data["name"]
+	real_name = teppi_data["real_name"]
+	faction = teppi_data["faction"]
+	affinity = teppi_data["affinity"]
+	affection_factor = teppi_data["affection_factor"]
+	nutrition = teppi_data["nutrition"]
+	allergen_preference = teppi_data["allergen_preference"]
+	allergen_unpreference = teppi_data["allergen_unpreference"]
+	color = teppi_data["color"]
+	marking_color = teppi_data["marking_color"]
+	horn_color = teppi_data["horn_color"]
+	eye_color = teppi_data["eye_color"]
+	skin_color = teppi_data["skin_color"]
 	ghostjoin = 1
-	active_ghost_pods |= src
+	GLOB.active_ghost_pods += src
 	update_icon()
 
 //This sets all the things on baby teppi when they are bred from adult teppi
@@ -1082,7 +1100,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 			tepholder.lay_down()
 			return
 		var/moving_to = 0 // Apparently this is required or it always picks 4, according to the previous developer for simplemob AI.
-		moving_to = pick(cardinal)
+		moving_to = pick(GLOB.cardinal)
 		holder.set_dir(moving_to)
 		T = get_step(holder,moving_to)
 	// Finally do move if we actually found somewhere we'd like to go
@@ -1139,13 +1157,13 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 			return
 
 //This a teppi with funny colors will spawn!
-/mob/living/simple_mob/vore/alienanimals/teppi/mutant/New()
+/mob/living/simple_mob/vore/alienanimals/teppi/mutant/Initialize(mapload)
 	teppi_mutate = TRUE
 	. = ..()
 
 //Custom teppi colors! For funzies.
 
-/mob/living/simple_mob/vore/alienanimals/teppi/cass/New()
+/mob/living/simple_mob/vore/alienanimals/teppi/cass/Initialize(mapload)
 	inherit_colors = TRUE
 	color = "#c69c85"
 	marking_color = "#eeb698"
@@ -1156,7 +1174,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 	horn_type =  "0"
 	. = ..()
 
-/mob/living/simple_mob/vore/alienanimals/teppi/baby/cass/New()
+/mob/living/simple_mob/vore/alienanimals/teppi/baby/cass/Initialize(mapload)
 	inherit_colors = TRUE
 	color = "#c69c85"
 	marking_color = "#eeb698"
@@ -1167,7 +1185,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 	horn_type =  "0"
 	. = ..()
 
-/mob/living/simple_mob/vore/alienanimals/teppi/aronai/New()
+/mob/living/simple_mob/vore/alienanimals/teppi/aronai/Initialize(mapload)
 	inherit_colors = TRUE
 	color = "#404040"
 	marking_color = "#222222"
@@ -1178,7 +1196,7 @@ GLOBAL_VAR_INIT(teppi_count, 0)	// How mant teppi DO we have?
 	horn_type = "1"
 	. = ..()
 
-/mob/living/simple_mob/vore/alienanimals/teppi/lira/New()
+/mob/living/simple_mob/vore/alienanimals/teppi/lira/Initialize(mapload)
 	inherit_colors = TRUE
 	color = "#fdfae9"
 	marking_color = "#ffffc0"

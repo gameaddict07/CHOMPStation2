@@ -305,8 +305,8 @@
 	for(var/j in SSjob.get_job_titles_in_department(DEPARTMENT_SYNTHETIC))
 		output += "<option value='[j]'>[j]</option>"
 	var/list/bantypes = list("traitor","changeling","operative","revolutionary","cultist","wizard") //For legacy bans.
-	for(var/antag_type in all_antag_types) // Grab other bans.
-		var/datum/antagonist/antag = all_antag_types[antag_type]
+	for(var/antag_type in GLOB.all_antag_types) // Grab other bans.
+		var/datum/antagonist/antag = GLOB.all_antag_types[antag_type]
 		bantypes |= antag.bantype
 	for(var/j in bantypes)
 		output += "<option value='[j]'>[j]</option>"
@@ -483,4 +483,6 @@
 			output += "</table></div>"
 			qdel(select_query)
 
-	usr << browse("<html>[output]</html>","window=lookupbans;size=900x700")
+	var/datum/browser/popup = new(owner, "lookupbans", "Lookup Bans", 900, 700)
+	popup.set_content(output)
+	popup.open()
