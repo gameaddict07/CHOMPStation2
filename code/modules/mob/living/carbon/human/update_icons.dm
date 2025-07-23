@@ -880,6 +880,7 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 	update_inv_shoes()
 	update_tail_showing()
 	update_wing_showing()
+	update_vore_belly_sprite()
 
 	if(!wear_suit)
 		return //No point, no suit.
@@ -1413,15 +1414,23 @@ GLOBAL_LIST_EMPTY(damage_icon_parts) //see UpdateDamageIcon()
 		return
 
 	remove_layer(VORE_BELLY_LAYER)
+	remove_layer(VORE_BELLY_LOWER_LAYER)
 
 	var/image/vore_belly_image = get_vore_belly_image()
 	if(vore_belly_image)
-		vore_belly_image.layer = BODY_LAYER+VORE_BELLY_LAYER
-		overlays_standing[VORE_BELLY_LAYER] = vore_belly_image
-		//CHOMPEdit Disabling this until someone comes up with a less destructive approach. //vore_belly_image.plane = PLANE_CH_STOMACH //This one line of code. This ONE LINE OF CODE TOOK 6 HOURS TO FIGURE OUT. THANK YOU REDCAT.
-		vore_belly_image.appearance_flags = appearance_flags
-
-	apply_layer(VORE_BELLY_LAYER)
+		if(dir == NORTH)
+			vore_belly_image.layer = BODY_LAYER+VORE_BELLY_LOWER_LAYER
+			overlays_standing[VORE_BELLY_LOWER_LAYER] = vore_belly_image
+			vore_belly_image.appearance_flags = appearance_flags
+			apply_layer(VORE_BELLY_LOWER_LAYER)
+			return
+		else
+			vore_belly_image.layer = BODY_LAYER+VORE_BELLY_LAYER
+			overlays_standing[VORE_BELLY_LAYER] = vore_belly_image
+			//CHOMPEdit Disabling this until someone comes up with a less destructive approach. //vore_belly_image.plane = PLANE_CH_STOMACH //This one line of code. This ONE LINE OF CODE TOOK 6 HOURS TO FIGURE OUT. THANK YOU REDCAT.
+			vore_belly_image.appearance_flags = appearance_flags
+			apply_layer(VORE_BELLY_LAYER)
+			return
 
 /mob/living/carbon/human/proc/get_vore_belly_image()
 	if(!(wear_suit && wear_suit.flags_inv & HIDETAIL))
