@@ -282,4 +282,4 @@
 
 /mob/living/carbon/human/set_dir(var/new_dir)
 	. = ..()
-		update_inv_wear_suit()
+	update_inv_wear_suit()
