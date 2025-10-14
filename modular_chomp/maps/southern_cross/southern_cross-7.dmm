@@ -1077,9 +1077,7 @@
 /turf/simulated/floor,
 /area/expoutpost/reactorroom)
 "aEx" = (
-/obj/machinery/door/airlock/glass_centcom{
-	req_one_access = list(67)
-	},
+/obj/machinery/door/airlock/voidcraft,
 /turf/simulated/shuttle/floor/black,
 /area/shuttle/shuttle3/start)
 "aEz" = (
@@ -2586,9 +2584,7 @@
 /turf/simulated/floor/tiled,
 /area/expoutpost/explobriefroom)
 "bTd" = (
-/obj/machinery/door/airlock/glass_centcom{
-	req_one_access = list(67)
-	},
+/obj/machinery/door/airlock/voidcraft,
 /turf/simulated/floor/tiled/milspec,
 /area/shuttle/stargazer)
 "bTg" = (
@@ -5402,7 +5398,7 @@
 /turf/simulated/floor/tiled/techfloor,
 /area/expoutpost/midsternhallway)
 "etp" = (
-/obj/machinery/computer/rdconsole/core,
+/obj/machinery/computer/rdconsole_tg,
 /obj/effect/floor_decal/milspec/color/purple,
 /turf/simulated/floor/tiled/milspec,
 /area/shuttle/ursula)
@@ -6844,7 +6840,7 @@
 /turf/simulated/floor/tiled/dark,
 /area/expoutpost/eva)
 "fyp" = (
-/obj/machinery/r_n_d/protolathe,
+/obj/machinery/rnd/production/protolathe/department/science,
 /obj/effect/floor_decal/industrial/outline/yellow,
 /turf/simulated/floor/tiled,
 /area/expoutpost/rnd)
@@ -9098,7 +9094,7 @@
 /turf/simulated/floor/tiled/dark,
 /area/expoutpost/engoffice)
 "hwZ" = (
-/obj/machinery/r_n_d/circuit_imprinter,
+/obj/machinery/rnd/production/circuit_imprinter,
 /obj/effect/floor_decal/industrial/outline/yellow,
 /obj/item/reagent_containers/glass/beaker/large,
 /turf/simulated/floor/tiled,
@@ -9279,16 +9275,12 @@
 /turf/simulated/floor/tiled,
 /area/expoutpost/explobriefroom)
 "hEI" = (
-/obj/machinery/computer/rdconsole/robotics{
-	dir = 8
-	},
 /obj/structure/reagent_dispensers/acid{
 	pixel_x = 30
 	},
 /obj/effect/floor_decal/borderfloorblack{
 	dir = 4
 	},
-/obj/effect/floor_decal/industrial/outline/yellow,
 /turf/simulated/floor/tiled/milspec/raised,
 /area/expoutpost/rnd)
 "hEM" = (
@@ -13461,9 +13453,7 @@
 /turf/simulated/floor/tiled,
 /area/expoutpost/hangarone)
 "lis" = (
-/obj/machinery/door/airlock/centcom{
-	req_one_access = newlist()
-	},
+/obj/machinery/door/airlock/voidcraft,
 /turf/simulated/floor/tiled/milspec,
 /area/shuttle/shuttle3/start)
 "liP" = (
@@ -14934,10 +14924,10 @@
 /turf/simulated/floor/tiled/dark,
 /area/expoutpost/staginghangar)
 "mkU" = (
-/obj/machinery/door/airlock/glass_centcom,
 /obj/structure/cable/blue{
 	icon_state = "1-2"
 	},
+/obj/machinery/door/airlock/voidcraft,
 /turf/simulated/floor/tiled/milspec,
 /area/shuttle/stargazer)
 "mld" = (
@@ -18280,7 +18270,7 @@
 /turf/simulated/floor/tiled/dark,
 /area/expoutpost/lowersternhallway)
 "oMc" = (
-/obj/machinery/mecha_part_fabricator,
+/obj/machinery/mecha_part_fabricator_tg,
 /obj/effect/floor_decal/industrial/outline/yellow,
 /turf/simulated/floor/tiled,
 /area/expoutpost/rnd)
@@ -20874,11 +20864,6 @@
 /obj/structure/railing,
 /turf/simulated/floor,
 /area/expoutpost/portuppermaint)
-"qWZ" = (
-/obj/machinery/r_n_d/destructive_analyzer,
-/obj/effect/floor_decal/industrial/outline/yellow,
-/turf/simulated/floor/tiled,
-/area/expoutpost/rnd)
 "qXk" = (
 /obj/effect/wingrille_spawn/reinforced/polarized{
 	id = "aeg_surgery_tint"
@@ -23359,15 +23344,6 @@
 /obj/structure/catwalk,
 /turf/simulated/floor,
 /area/expoutpost/portsternairlock)
-"sWF" = (
-/obj/machinery/door/airlock/glass_centcom{
-	req_one_access = list(67)
-	},
-/obj/structure/cable/green{
-	icon_state = "1-2"
-	},
-/turf/simulated/floor/tiled/milspec,
-/area/shuttle/baby_mammoth)
 "sXC" = (
 /obj/effect/floor_decal/borderfloorwhite{
 	dir = 1
@@ -27430,7 +27406,7 @@
 /obj/structure/window/reinforced{
 	dir = 8
 	},
-/obj/machinery/computer/rdconsole/core{
+/obj/machinery/computer/rdconsole_tg{
 	dir = 4
 	},
 /obj/effect/floor_decal/industrial/outline/yellow,
@@ -28196,10 +28172,10 @@
 /turf/simulated/floor/carpet,
 /area/expoutpost/suite1)
 "wLJ" = (
-/obj/machinery/door/airlock/glass_centcom,
 /obj/structure/cable/green{
 	icon_state = "1-2"
 	},
+/obj/machinery/door/airlock/voidcraft,
 /turf/simulated/floor/tiled/milspec,
 /area/shuttle/baby_mammoth)
 "wLS" = (
@@ -29548,7 +29524,7 @@
 /turf/simulated/floor,
 /area/expoutpost/portexplomaint)
 "xKO" = (
-/obj/machinery/mecha_part_fabricator/pros,
+/obj/machinery/mecha_part_fabricator_tg/prosthetics,
 /obj/effect/floor_decal/industrial/outline/yellow,
 /turf/simulated/floor/tiled,
 /area/expoutpost/rnd)
@@ -30000,18 +29976,16 @@
 /obj/structure/cable/cyan{
 	icon_state = "1-2"
 	},
-/obj/machinery/power/sensor,
+/obj/machinery/power/sensor{
+	name = "Powernet Sensor - Carrier Reactor Power";
+	name_tag = "Carrier Reactor Power"
+	},
 /obj/machinery/door/firedoor/glass,
 /obj/machinery/door/airlock/engineering{
 	name = "R-UST Access"
 	},
 /turf/simulated/floor,
 /area/expoutpost/reactoraccess)
-"xZQ" = (
-/obj/machinery/r_n_d/destructive_analyzer,
-/obj/effect/floor_decal/milspec/color/purple,
-/turf/simulated/floor/tiled/milspec,
-/area/shuttle/ursula)
 "yad" = (
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 9
@@ -60206,7 +60180,7 @@ bYa
 bYa
 bYa
 cPL
-xZQ
+mmL
 fQz
 phx
 nVg
@@ -68223,7 +68197,7 @@ qoM
 qDn
 pmr
 dvl
-sWF
+wLJ
 qfx
 qfx
 qfx
@@ -68260,7 +68234,7 @@ iNm
 gWG
 fyp
 kMk
-qWZ
+kMk
 sUH
 pcO
 uki

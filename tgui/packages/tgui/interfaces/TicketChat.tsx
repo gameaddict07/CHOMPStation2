@@ -1,4 +1,3 @@
-/* eslint react/no-danger: "off" */
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
@@ -66,7 +65,7 @@ export const TicketChat = (props) => {
         scroll.scrollTop = scroll.scrollHeight;
       }
     }
-  });
+  }, [log]);
 
   return (
     <Window width={900} height={600}>
@@ -99,6 +98,7 @@ export const TicketChat = (props) => {
                     .map((L, i) => (
                       <div
                         key={i}
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Ticket Chat
                         dangerouslySetInnerHTML={{ __html: log[L] }}
                       />
                     ))}
