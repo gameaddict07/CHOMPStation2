@@ -23,7 +23,7 @@
 	icon_keyboard = "tech_key"
 	icon_screen = "supply"
 	light_color = "#b88b2e"
-	//req_access = list(access_cargo) //CHOMPedit, removing hard access locks.
+	//req_access = list(ACCESS_CARGO) //CHOMPRemove, removing hard access locks.
 	circuit = /obj/item/circuitboard/supplycomp/control
 	authorization = SUP_SEND_SHUTTLE | SUP_ACCEPT_ORDERS
 
@@ -488,7 +488,7 @@
 	add_fingerprint(ui.user)
 
 /obj/machinery/computer/supplycomp/proc/post_signal(var/command)
-	var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+	var/datum/radio_frequency/frequency = SSradio.return_frequency(1435)
 
 	if(!frequency) return
 

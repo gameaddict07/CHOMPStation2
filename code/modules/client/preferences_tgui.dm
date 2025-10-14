@@ -136,9 +136,6 @@
 	switch(action)
 		// Basic actions
 		if("load")
-			if(!isnewplayer(ui.user))
-				to_chat(ui.user, span_userdanger("You can't change your character slot while being in round."))
-				return FALSE
 			if(!IsGuestKey(ui.user.key))
 				open_load_dialog(ui.user)
 			. = TRUE
@@ -151,7 +148,7 @@
 		if("reload")
 			load_preferences(TRUE)
 			load_character()
-			attempt_vr(client.prefs_vr,"load_vore","") //VOREStation Edit
+			client.prefs_vr.load_vore()
 			sanitize_preferences()
 			. = TRUE
 		if("resetslot")
@@ -192,7 +189,7 @@
 
 /datum/preferences/proc/jiggle_map()
 	// Fix for weird byond bug, jiggles the map around a little
-	var/obj/screen/setup_preview/pm_helper/PMH = LAZYACCESS(char_render_holders, "PMH")
+	var/atom/movable/screen/setup_preview/pm_helper/PMH = LAZYACCESS(char_render_holders, "PMH")
 	sleep(0.1 SECONDS)
 	PMH.screen_loc = LAZYACCESS(preview_screen_locs, "PMHjiggle")
 	sleep(0.1 SECONDS)

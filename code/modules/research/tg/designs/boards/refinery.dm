@@ -78,21 +78,21 @@
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING
 
-/datum/design_techweb/board/industrial_reagent_waste_processor
-	name = "Industrial Reagent Waste Processor"
-	id = "industrial_reagent_waste_processor"
+/datum/design_techweb/board/industrial_reagent_mixer
+	name = "Industrial Reagent Mixer"
+	id = "industrial_reagent_mixer"
 	// req_tech = list(TECH_DATA = 1)
-	build_path = /obj/item/circuitboard/industrial_reagent_waste_processor
+	build_path = /obj/item/circuitboard/industrial_reagent_mixer
 	category = list(
 		RND_CATEGORY_MACHINE + RND_SUBCATEGORY_MACHINE_ENGINEERING
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING
 
-/datum/design_techweb/board/smart_centrifuge
-	name = "Smart Centrifuge"
-	id = "smart_centrifuge"
-	// req_tech = list(TECH_MAGNET = 2, TECH_DATA = 1, TECH_MATERIAL = 2)
-	build_path = /obj/item/circuitboard/smart_centrifuge
+/datum/design_techweb/board/industrial_reagent_waste_processor
+	name = "Industrial Reagent Waste Processor"
+	id = "industrial_reagent_waste_processor"
+	// req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/circuitboard/industrial_reagent_waste_processor
 	category = list(
 		RND_CATEGORY_MACHINE + RND_SUBCATEGORY_MACHINE_ENGINEERING
 	)

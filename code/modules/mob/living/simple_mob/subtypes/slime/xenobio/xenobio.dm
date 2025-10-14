@@ -10,8 +10,8 @@
 	var/power_charge = 0 // Disarm attacks can shock someone if high/lucky enough.
 	var/mob/living/victim = null // the person the slime is currently feeding on
 	var/rainbow_core_candidate = TRUE // If false, rainbow cores cannot make this type randomly.
-	var/mutation_chance = 30 // CHOMPedit Odds of spawning as a new color when reproducing.  Can be modified by certain xenobio products.  Carried across generations of slimes.
-	var/split_amount = 5 //Chompedit: increased from 4 to 5 to make xenobio faster and deadlier.  Amount of children we will normally have. Half of that for dead adult slimes. Is NOT carried across generations.
+	var/mutation_chance = 30 // Odds of spawning as a new color when reproducing.  Can be modified by certain xenobio products.  Carried across generations of slimes.// CHOMPEdit
+	var/split_amount = 5 // Amount of children we will normally have. Half of that for dead adult slimes. Is NOT carried across generations. // CHOMPEdit
 	var/untamable = FALSE //Makes slime untamable via discipline.
 	var/untamable_inheirit = FALSE //Makes slime inheirit its untamability.
 	var/list/slime_mutation = list(
@@ -160,7 +160,9 @@
 		pacified = FALSE //We are not obedient enough to be considered pacified.
 
 	if(!client) //Only update if we don't have a client.
-		if(old_mood == "angry") //We were recently angry, so we're still upset and won't let you eat us no matter what! (Unless we had a docility potion put on us, making us harmless)
+		if(faction != FACTION_SLIME) //We have had a loyalty potion used on us.
+			update_allowed_vore_types(TRUE)
+		else if(old_mood == "angry") //We were recently angry, so we're still upset and won't let you eat us no matter what! (Unless we had a docility potion put on us, making us harmless)
 			update_allowed_vore_types(FALSE, harmless)
 		else
 			update_allowed_vore_types(pacified, harmless)
@@ -171,13 +173,11 @@
 /mob/living/simple_mob/slime/proc/update_allowed_vore_types(allowed, harmless)
 	if(harmless) // If we're harmless, we should always be able to be eaten.
 		allowed = TRUE
-	devourable = allowed
 	can_be_drop_prey = allowed
 	stumble_vore = allowed
 	slip_vore = allowed
 	drop_vore = allowed
 	throw_vore = allowed
-	devourable = allowed
 
 /mob/living/simple_mob/slime/xenobio/proc/enrage()
 	if(harmless)

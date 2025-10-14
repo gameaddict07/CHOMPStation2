@@ -6,11 +6,13 @@
 	var/msg = !auth ? "no" : "a bad"
 	message_admins("[key_name_admin(usr)] clicked an href with [msg] authorization key!")
 
+	/* Debug code in case one needs to dig missing token HREFS
 	var/debug_admin_hrefs = TRUE // Remove once everything is converted over
 	if(debug_admin_hrefs)
 		message_admins("Debug mode enabled, call not blocked. Please ask your coders to review this round's logs.")
 		log_world("UAH: [href]")
 		return TRUE
+	*/
 
 	log_admin("[key_name(usr)] clicked an href with [msg] authorization key! [href]")
 
@@ -25,7 +27,7 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
-	if(ticker.mode && ticker.mode.check_antagonists_topic(href, href_list))
+	if(SSticker.mode && SSticker.mode.check_antagonists_topic(href, href_list))
 		check_antagonists()
 		return
 
@@ -66,13 +68,13 @@
 	else if(href_list["call_shuttle"])
 		if(!check_rights(R_ADMIN|R_EVENT))	return
 
-		if( ticker.mode.name == "blob" )
+		if( SSticker.mode.name == "blob" )
 			tgui_alert_async(usr, "You can't call the shuttle during blob!")
 			return
 
 		switch(href_list["call_shuttle"])
 			if("1")
-				if ((!( ticker ) || !emergency_shuttle.location()))
+				if ((!( SSticker ) || !emergency_shuttle.location()))
 					return
 				if (emergency_shuttle.can_call())
 					emergency_shuttle.call_evac()
@@ -80,7 +82,7 @@
 					message_admins(span_blue("[key_name_admin(usr)] called the Emergency Shuttle to the station."), 1)
 
 			if("2")
-				if (!( ticker ) || !emergency_shuttle.location())
+				if (!( SSticker ) || !emergency_shuttle.location())
 					return
 				if (emergency_shuttle.can_call())
 					emergency_shuttle.call_evac()
@@ -119,9 +121,9 @@
 	else if(href_list["delay_round_end"])
 		if(!check_rights(R_SERVER))	return
 
-		ticker.delay_end = !ticker.delay_end
-		log_admin("[key_name(usr)] [ticker.delay_end ? "delayed the round end" : "has made the round end normally"].")
-		message_admins(span_blue("[key_name(usr)] [ticker.delay_end ? "delayed the round end" : "has made the round end normally"]."), 1)
+		SSticker.delay_end = !SSticker.delay_end
+		log_admin("[key_name(usr)] [SSticker.delay_end ? "delayed the round end" : "has made the round end normally"].")
+		message_admins(span_blue("[key_name(usr)] [SSticker.delay_end ? "delayed the round end" : "has made the round end normally"]."), 1)
 		href_list["secretsadmin"] = "check_antagonist"
 
 	else if(href_list["simplemake"])
@@ -833,7 +835,7 @@
 	else if(href_list["c_mode"])
 		if(!check_rights(R_ADMIN|R_EVENT))	return
 
-		if(ticker && ticker.mode)
+		if(SSticker && SSticker.mode)
 			return tgui_alert_async(usr, "The game has already started.")
 		var/dat = {"<B>What mode do you wish to play?</B><HR>"}
 		for(var/mode in config.modes)
@@ -846,7 +848,7 @@
 	else if(href_list["f_secret"])
 		if(!check_rights(R_ADMIN|R_EVENT))	return
 
-		if(ticker && ticker.mode)
+		if(SSticker && SSticker.mode)
 			return tgui_alert_async(usr, "The game has already started.")
 		if(GLOB.master_mode != "secret")
 			return tgui_alert_async(usr, "The game mode has to be secret!")
@@ -860,12 +862,12 @@
 	else if(href_list["c_mode2"])
 		if(!check_rights(R_ADMIN|R_SERVER|R_EVENT))	return
 
-		if (ticker && ticker.mode)
+		if (SSticker && SSticker.mode)
 			return tgui_alert_async(usr, "The game has already started.")
 		GLOB.master_mode = href_list["c_mode2"]
 		log_admin("[key_name(usr)] set the mode as [config.mode_names[GLOB.master_mode]].")
 		message_admins(span_blue("[key_name_admin(usr)] set the mode as [config.mode_names[GLOB.master_mode]]."), 1)
-		to_world(span_world(span_blue("The mode is now: [config.mode_names[GLOB.master_mode]]")))
+		to_chat(world, span_world(span_blue("The mode is now: [config.mode_names[GLOB.master_mode]]")))
 		Game() // updates the main game menu
 		world.save_mode(GLOB.master_mode)
 		.(href, list("c_mode"=1))
@@ -873,7 +875,7 @@
 	else if(href_list["f_secret2"])
 		if(!check_rights(R_ADMIN|R_SERVER|R_EVENT))	return
 
-		if(ticker && ticker.mode)
+		if(SSticker && SSticker.mode)
 			return tgui_alert_async(usr, "The game has already started.")
 		if(GLOB.master_mode != "secret")
 			return tgui_alert_async(usr, "The game mode has to be secret!")
@@ -1222,6 +1224,17 @@
 		sleep(2)
 		C.jumptocoord(x,y,z)
 
+	else if(href_list["viewruntime"])
+		var/datum/error_viewer/error_viewer = locate(href_list["viewruntime"])
+		if(!istype(error_viewer))
+			to_chat(usr, span_warning("That runtime viewer no longer exists."), confidential = TRUE)
+			return
+
+		if(href_list["viewruntime_backto"])
+			error_viewer.show_to(owner, locate(href_list["viewruntime_backto"]), href_list["viewruntime_linear"])
+		else
+			error_viewer.show_to(owner, null, href_list["viewruntime_linear"])
+
 	else if(href_list["adminchecklaws"])
 		output_ai_laws()
 
@@ -1496,7 +1509,7 @@
 	else if(href_list["traitor"])
 		if(!check_rights(R_ADMIN|R_MOD|R_EVENT))	return
 
-		if(!ticker || !ticker.mode)
+		if(!SSticker|| !SSticker.mode)
 			tgui_alert_async(usr, "The game hasn't started yet!")
 			return
 
@@ -1869,7 +1882,7 @@
 					to_chat(usr, span_filter_adminlog("Failed to remove language '[lang2toggle]' from \the [M]!"))
 			else
 				if(!M.add_language(lang2toggle))
-					to_chat(usr, span_filter_adminlog("Failed to add language '[lang2toggle]' from \the [M]!"))
+					to_chat(usr, span_filter_adminlog("Failed to add language '[lang2toggle]' to \the [M]!"))
 
 			SSadmin_verbs.dynamic_invoke_verb(usr.client, /datum/admin_verb/show_player_panel, M)
 

@@ -4327,6 +4327,9 @@
 /obj/structure/cable{
 	icon_state = "1-2"
 	},
+/obj/structure/cable{
+	icon_state = "0-2"
+	},
 /turf/simulated/floor/plating,
 /area/maintenance/thirddeck/forestarboard)
 "dIz" = (
@@ -8246,6 +8249,9 @@
 /obj/effect/floor_decal/corner/blue/border{
 	dir = 4
 	},
+/obj/machinery/light_switch{
+	pixel_x = 36
+	},
 /turf/simulated/floor/tiled,
 /area/hallway/primary/thirddeck/central)
 "gsS" = (
@@ -8440,6 +8446,10 @@
 /obj/structure/cable/green,
 /obj/effect/floor_decal/borderfloor,
 /obj/effect/floor_decal/corner/blue/border,
+/obj/machinery/light_switch{
+	pixel_x = 11;
+	pixel_y = -24
+	},
 /turf/simulated/floor/tiled,
 /area/hallway/primary/thirddeck/starboard)
 "gEG" = (
@@ -8522,11 +8532,7 @@
 /turf/simulated/shuttle/wall,
 /area/shuttle/escape_pod7/station)
 "gJN" = (
-/turf/simulated/shuttle/wall/no_join{
-	base_state = "orange";
-	icon = 'icons/turf/shuttle_orange.dmi';
-	icon_state = "orange"
-	},
+/turf/simulated/shuttle/wall/no_join/orange,
 /area/shuttle/escape_pod7/station)
 "gKj" = (
 /obj/structure/disposalpipe/segment{
@@ -8946,11 +8952,7 @@
 /turf/simulated/floor/tiled,
 /area/maintenance/thirddeck/dormsstarboard/maintbar)
 "hgE" = (
-/turf/simulated/shuttle/wall/no_join{
-	base_state = "orange";
-	icon = 'icons/turf/shuttle_orange.dmi';
-	icon_state = "orange"
-	},
+/turf/simulated/shuttle/wall/no_join/orange,
 /area/shuttle/escape_pod8/station)
 "hgN" = (
 /obj/structure/bed/chair{
@@ -11706,7 +11708,6 @@
 /turf/simulated/floor/plating,
 /area/maintenance/thirddeck/dormsatmos)
 "jKZ" = (
-/obj/item/toy/bosunwhistle/fluff/strix,
 /obj/structure/table/rack/shelf/steel,
 /obj/item/toy/colorballoon,
 /obj/item/toy/colorballoon,
@@ -12897,6 +12898,9 @@
 	pixel_x = 24
 	},
 /obj/structure/cable/green,
+/obj/machinery/light_switch{
+	pixel_x = 36
+	},
 /turf/simulated/floor/tiled,
 /area/hallway/primary/thirddeck/aft)
 "kQk" = (
@@ -17647,6 +17651,9 @@
 /obj/structure/cable/green{
 	icon_state = "0-2"
 	},
+/obj/machinery/light_switch{
+	pixel_x = 36
+	},
 /turf/simulated/floor/tiled/techfloor,
 /area/hallway/primary/thirddeck/stationgateway)
 "oOk" = (
@@ -17736,6 +17743,10 @@
 	},
 /obj/effect/floor_decal/corner/white/border{
 	dir = 1
+	},
+/obj/machinery/light_switch{
+	pixel_x = 11;
+	pixel_y = 24
 	},
 /turf/simulated/floor/tiled,
 /area/hallway/primary/thirddeck/aftportcentral)
@@ -17835,6 +17846,10 @@
 	},
 /obj/effect/floor_decal/corner/blue/border{
 	dir = 1
+	},
+/obj/machinery/light_switch{
+	pixel_x = 11;
+	pixel_y = 24
 	},
 /turf/simulated/floor/tiled,
 /area/hallway/primary/thirddeck/aftstarboardcentral)
@@ -22356,6 +22371,9 @@
 	pixel_x = 24
 	},
 /obj/structure/cable/green,
+/obj/machinery/light_switch{
+	pixel_x = 36
+	},
 /turf/simulated/floor/tiled/techmaint,
 /area/crew_quarters/thirddeck/vrroom)
 "sHc" = (
@@ -24899,6 +24917,10 @@
 	pixel_y = -24
 	},
 /obj/structure/cable/green,
+/obj/machinery/light_switch{
+	pixel_x = 11;
+	pixel_y = -24
+	},
 /turf/simulated/floor/tiled/freezer,
 /area/crew_quarters/toilet)
 "uNf" = (

@@ -197,8 +197,8 @@ var/list/sacrificed = list()
 			cultists.Add(M)
 	if(cultists.len >= 9)
 		if(!narsie_cometh)//so we don't initiate Hell more than one time.
-			to_world(span_narsie(span_red(span_bold("THE VEIL HAS BEEN SHATTERED!"))))
-			world << sound('sound/effects/weather/old_wind/wind_5_1.ogg')
+			to_chat(world, span_world(span_narsie(span_red("THE VEIL HAS BEEN SHATTERED!"))))
+			world << sound('sound/effects/weather/old_wind/wind_5_1.ogg') // CHOMPEdit - No idea why this wind is here now
 
 			SetUniversalState(/datum/universal_state/hell)
 			narsie_cometh = 1
@@ -665,7 +665,7 @@ var/list/sacrificed = list()
 			if(lamb.species.rarity_value > 3)
 				worth = 1
 
-		if (ticker.mode.name == "cult")
+		if (SSticker.mode.name == "cult")
 			if(H.mind == cult.sacrifice_target)
 				if(cultsinrange.len >= 3)
 					sacrificed += H.mind
@@ -992,7 +992,7 @@ var/list/sacrificed = list()
 /obj/effect/rune/proc/bloodboil() //cultists need at least one DANGEROUS rune. Even if they're all stealthy.
 /*
 	var/list/mob/living/carbon/cultists = new
-	for(var/datum/mind/H in ticker.mode.cult)
+	for(var/datum/mind/H in SSticker.mode.cult)
 		if (istype(H.current,/mob/living/carbon))
 			cultists+=H.current
 */

@@ -2082,7 +2082,7 @@
 /obj/item/reagent_containers/food/snacks/monkeycube/wrapped
 	desc = "Still wrapped in some paper."
 	icon_state = "monkeycubewrap"
-	flags = 0
+	flags = NONE
 	wrapped = 1
 
 /obj/item/reagent_containers/food/snacks/monkeycube/farwacube
@@ -2116,7 +2116,7 @@
 /obj/item/reagent_containers/food/snacks/monkeycube/pet/wrapped
 	desc = "Still wrapped in some paper."
 	icon_state = "monkeycubewrap"
-	flags = 0
+	flags = NONE
 	wrapped = 1
 
 /obj/item/reagent_containers/food/snacks/monkeycube/pet/Expand()
@@ -7683,7 +7683,9 @@
 /obj/item/reagent_containers/food/snacks/packaged/mochicake
 	name = "\improper Mochi Cake"
 	icon_state = "mochicake"
-	desc = "Konnichiwa! Many go lucky rice cakes in future!"
+	desc = "A sweet little cake originating from the Sol system, made from sweet rice flour. \
+	Traditionally prepared in a ceremony known as mochitsuki, in which a community would gather grind the rice for special occasions. \
+	However this particular treat was no doubt mashed together in a factory."
 	package_trash = /obj/item/trash/mochicakewrap
 	package_open_state = "lunacake_open"
 	filling_color = "#ffffff"
@@ -7813,3 +7815,17 @@
 /obj/item/reagent_containers/food/snacks/packaged/vendburrito/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(REAGENT_ID_SODIUMCHLORIDE, 1)
+
+/obj/item/reagent_containers/food/snacks/churro
+	name = "churro"
+	desc = "Dough, deep fried in olive oil. No toppings on it!"
+	icon_state = "churro"
+	trash = /obj/item/paper/crumpled
+	filling_color = "#F5B951"
+	bitesize = 2
+	nutriment_desc = list("deep fried dough" = 2)
+	nutriment_amt = 2
+
+/obj/item/reagent_containers/food/snacks/churro/Initialize(mapload)
+	. = ..()
+	reagents.add_reagent(REAGENT_ID_COOKINGOIL, 1)
