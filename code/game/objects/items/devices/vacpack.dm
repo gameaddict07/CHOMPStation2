@@ -128,7 +128,6 @@
 					suckables += L
 					continue
 				if(istype(L,/mob/living/simple_mob/animal/passive/mouse) || istype(L,/mob/living/simple_mob/animal/passive/lizard) || istype(L,/mob/living/simple_mob/animal/passive/cockroach))
-<<<<<<< HEAD:modular_chomp/code/game/objects/items/devices/vacpack.dm
 					suckables |= L
 		if(vac_power >= 4)
 			for(var/obj/item/I in target)
@@ -152,9 +151,6 @@
 				suckables |= L
 			for(var/obj/O in target)
 				suckables |= O
-=======
-					suckables += L
->>>>>>> upstream/master:code/game/objects/items/devices/vacpack.dm
 		if(LAZYLEN(suckables))
 			if(vac_power == 7)
 				for(var/atom/movable/F in suckables)
