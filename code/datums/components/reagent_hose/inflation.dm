@@ -110,7 +110,7 @@
 /datum/component/hose_connector/inflation/handle_pump(var/datum/reagents/connected_to)
 	ASSERT(connected_to)
 	var/datum/component/hose_connector/other = get_pairing()
-	var/rate = reagents.maximum_volume * 0.5
+	var/rate = 1000 //BIG SIP
 	if(connection_mode == CHEM_BLOOD)
 		rate = 10 // SLOW here
 	else

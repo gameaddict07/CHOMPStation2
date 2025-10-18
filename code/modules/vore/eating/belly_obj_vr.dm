@@ -201,7 +201,7 @@
 	var/gen_interval = 0							//Interval in seconds for generating fluids, once it reaches the value of gen_time one cycle of reagents generation will occur
 	var/gen_time = 5								//Time it takes in seconds to produce one cycle of reagents, technically add 1 second to it for the tick where the fluid is produced
 	var/gen_time_display = "1 hour"					//The displayed time it takes from a belly to go from 0 to 100
-	var/custom_max_volume = 100						//Variable for people to limit amount of liquid they can receive/produce in a belly
+	var/custom_max_volume = 1000000000						//Variable for people to limit amount of liquid they can receive/produce in a belly
 	var/digest_nutri_gain = 0						//variable to store temporary nutrition gain from digestion and allow a seperate proc to ease up on the wall of code
 	var/reagent_transfer_verb = "injects"			//verb for transfer of reagent from a vore belly
 
@@ -495,7 +495,7 @@
 			else
 				START_PROCESSING(SSbellies, src)
 
-	create_reagents(300)	// So we can have some liquids in bellies
+	create_reagents(1000000000)	// So we can have some liquids in bellies
 
 /obj/belly/Destroy()
 	if(mode_flags & DM_FLAG_TURBOMODE)
