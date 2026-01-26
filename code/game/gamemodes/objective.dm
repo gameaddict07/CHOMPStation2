@@ -67,8 +67,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 /datum/objective/anti_revolution/execute/find_target()
 	..()
 	if(target && target.current)
-		var/datum/gender/T = GLOB.gender_datums[target.current.get_visible_gender()]
-		explanation_text = "[target.current.real_name], the [target.assigned_role] has extracted confidential information above their clearance. Execute [T.him]."
+		explanation_text = "[target.current.real_name], the [target.assigned_role] has extracted confidential information above their clearance. Execute [target.p_them()]."
 	else
 		explanation_text = "Free Objective"
 	return target
@@ -77,8 +76,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 /datum/objective/anti_revolution/execute/find_target_by_role(role, role_type=0)
 	..(role, role_type)
 	if(target && target.current)
-		var/datum/gender/T = GLOB.gender_datums[target.current.get_visible_gender()]
-		explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has extracted confidential information above their clearance. Execute [T.him]."
+		explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has extracted confidential information above their clearance. Execute [target.p_them()]."
 	else
 		explanation_text = "Free Objective"
 	return target
@@ -126,8 +124,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 /datum/objective/anti_revolution/demote/find_target()
 	..()
 	if(target && target.current)
-		var/datum/gender/T = GLOB.gender_datums[target.current.get_visible_gender()]
-		explanation_text = "[target.current.real_name], the [target.assigned_role]  has been classified as harmful to [using_map.company_name]'s goals. Demote [T.him] to assistant."
+		explanation_text = "[target.current.real_name], the [target.assigned_role]  has been classified as harmful to [using_map.company_name]'s goals. Demote [target.p_them()] to assistant."
 	else
 		explanation_text = "Free Objective"
 	return target
@@ -135,8 +132,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 /datum/objective/anti_revolution/demote/find_target_by_role(role, role_type=0)
 	..(role, role_type)
 	if(target && target.current)
-		var/datum/gender/T = GLOB.gender_datums[target.current.get_visible_gender()]
-		explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has been classified as harmful to [using_map.company_name]'s goals. Demote [T.him] to assistant."
+		explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has been classified as harmful to [using_map.company_name]'s goals. Demote [target.p_them()] to assistant."
 	else
 		explanation_text = "Free Objective"
 	return target
@@ -694,7 +690,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 			if(istype(I,target)) total_amount++
 		if(total_amount >= target_amount) return 1
 
-	for(var/datum/mind/raider in raiders.current_antagonists)
+	for(var/datum/mind/raider in GLOB.raiders.current_antagonists)
 		if(raider.current)
 			for(var/obj/O in raider.current.get_contents())
 				if(istype(O,target)) total_amount++
@@ -748,7 +744,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 					S = I
 					total_amount += S.get_amount()
 
-	for(var/datum/mind/raider in raiders.current_antagonists)
+	for(var/datum/mind/raider in GLOB.raiders.current_antagonists)
 		if(raider.current)
 			for(var/obj/item/O in raider.current.get_contents())
 				if(istype(O,/obj/item/stack/material))
@@ -764,7 +760,7 @@ GLOBAL_LIST_EMPTY(all_objectives)
 	explanation_text = "Do not leave anyone behind, alive or dead."
 
 /datum/objective/heist/preserve_crew/check_completion()
-	if(raiders && raiders.is_raider_crew_safe()) return 1
+	if(GLOB.raiders && GLOB.raiders.is_raider_crew_safe()) return 1
 	return 0
 
 //Borer objective(s).

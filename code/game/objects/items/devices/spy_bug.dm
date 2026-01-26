@@ -26,11 +26,13 @@
 	camera = new camtype(src)
 
 /obj/item/camerabug/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(user.a_intent == I_HURT)
 		to_chat(user, span_notice("You crush the [src] under your foot, breaking it."))
 		visible_message(span_notice("[user.name] crushes the [src] under their foot, breaking it!"))
 		new brokentype(get_turf(src))
-		spawn(0)
 		qdel(src)
 /*	else
 		radio.interact(user)
@@ -170,7 +172,9 @@
 	radio = new(src)
 */
 /obj/item/bug_monitor/attack_self(mob/user)
-//	radio.attack_self(user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	view_cameras(user)
 
 /obj/item/bug_monitor/attackby(obj/item/W as obj, mob/living/user as mob)
@@ -190,8 +194,12 @@
 	if(in_use)
 		return
 
+	if(cameras.len == 1 && user.is_remote_viewing())
+		user.reset_perspective()
+		return
 	if(!can_use_cam(user))
 		return
+
 	if(cameras.len == 1)
 		selected_camera = cameras[1]
 	else
@@ -209,7 +217,7 @@
 		unpair(selected_camera)
 		selected_camera = null
 		return
-	user.AddComponent(/datum/component/remote_view/item_zoom, focused_on = selected_camera, our_item = src, viewsize = null, tileoffset = 0, show_visible_messages = TRUE)
+	user.AddComponent(/datum/component/remote_view/item_zoom, focused_on = selected_camera, vconfig_path = /datum/remote_view_config/camera_standard, our_item = src, viewsize = null, tileoffset = 0, show_visible_messages = TRUE)
 
 /obj/item/bug_monitor/proc/can_use_cam(mob/user)
 	if(!cameras.len)
@@ -230,9 +238,6 @@
 	. = ..()
 	if(Adjacent(user))
 		. += "The time '12:00' is blinking in the corner of the screen and \the [src] looks very cheaply made."
-
-/obj/machinery/camera/bug/check_eye(var/mob/user as mob)
-	return 0
 
 /obj/machinery/camera/bug
 	network = list(NETWORK_SECURITY)

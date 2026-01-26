@@ -52,9 +52,9 @@
 	..()
 	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
 
-	if(!restore_remote_views())
-		client.perspective = MOB_PERSPECTIVE
-		client.set_eye(src)
+	client.perspective = MOB_PERSPECTIVE
+	client.eye = src
+
 	add_click_catcher()
 	update_client_color()
 
@@ -103,3 +103,8 @@
 
 	set_listening(LISTENING_PLAYER)
 	GLOB.tickets.ClientLogin(client, TRUE)
+
+	if(GLOB.custom_event_msg && GLOB.custom_event_msg != "")
+		to_chat(src, "<h1 class='alert'>Custom Event</h1>")
+		to_chat(src, "<h2 class='alert'>A custom event is taking place. OOC Info:</h2>")
+		to_chat(src, span_alert("[GLOB.custom_event_msg]") + "\n")

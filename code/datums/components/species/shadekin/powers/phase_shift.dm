@@ -169,14 +169,14 @@
 		var/mob/living/our_prey
 		if(potentials.len)
 			var/mob/living/target = pick(potentials)
-			if(can_be_drop_pred && istype(target) && target.devourable && target.can_be_drop_prey && target.phase_vore && vore_selected && phase_vore)
-				target.forceMove(vore_selected)
+			if(can_phase_vore(src, target))
+				vore_selected.nom_atom(target)
 				to_chat(target, span_vwarning("\The [src] phases in around you, [vore_selected.vore_verb]ing you into their [vore_selected.get_belly_name()]!"))
 				to_chat(src, span_vwarning("You phase around [target], [vore_selected.vore_verb]ing them into your [vore_selected.get_belly_name()]!"))
 				our_prey = target
-			else if(can_be_drop_prey && istype(target) && devourable && target.can_be_drop_pred && target.phase_vore && target.vore_selected && phase_vore)
+			else if(can_phase_vore(target, src))
 				our_prey = src
-				forceMove(target.vore_selected)
+				target.vore_selected.nom_atom(src)
 				to_chat(target, span_vwarning("\The [src] phases into you, [target.vore_selected.vore_verb]ing them into your [target.vore_selected.get_belly_name()]!"))
 				to_chat(src, span_vwarning("You phase into [target], having them [target.vore_selected.vore_verb] you into their [target.vore_selected.get_belly_name()]!"))
 			if(our_prey)
@@ -248,7 +248,7 @@
 			name = get_visible_name()
 
 		for(var/obj/belly/B as anything in vore_organs)
-			B.escapable = FALSE
+			B.escapable = B_ESCAPABLE_NONE
 
 		var/obj/effect/temp_visual/shadekin/phase_out/phaseanim = new SK.phase_out_anim(src.loc)
 		phaseanim.pixel_y = (src.size_multiplier - 1) * 16 // Pixel shift for the animation placement

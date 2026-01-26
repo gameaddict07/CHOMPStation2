@@ -215,7 +215,7 @@
 		return
 	if(istype(O, /atom/movable/screen))
 		return
-	if(user.restrained() || user.stat || user.stunned || user.paralysis || (!user.lying && !isrobot(user)) || LAZYLEN(user.grabbed_by))
+	if(user.restrained() || user.stat || user.stunned || user.paralysis || (!user.lying && !isrobot(user)) || LAZYLEN(user.grabbed_by) || user.is_paralyzed())
 		return
 	if((!(istype(O, /atom/movable)) || O.anchored || !Adjacent(user) || !Adjacent(O) || !user.Adjacent(O)))
 		return
@@ -347,7 +347,7 @@
 	return
 
 // Called when turf is hit by a thrown object
-/turf/hitby(atom/movable/source, var/speed)
+/turf/hitby(atom/movable/source, datum/thrownthing/throwingdatum)
 	if(!density)
 		return
 
@@ -356,7 +356,7 @@
 			step(source, turn(source.last_move, 180)) //This makes it float away after hitting a wall in 0G
 	if(isliving(source))
 		var/mob/living/M = source
-		M.turf_collision(src, speed)
+		M.turf_collision(src, throwingdatum?.speed)
 
 /turf/AllowDrop()
 	return TRUE
@@ -520,6 +520,8 @@
 
 	if(istype(src, /turf/simulated))
 		var/turf/simulated/T = src
+		if(T.dirt > 0)
+			SEND_GLOBAL_SIGNAL(COMSIG_GLOB_WASHED_FLOOR)
 		T.dirt = 0
 
 	for(var/am in src)

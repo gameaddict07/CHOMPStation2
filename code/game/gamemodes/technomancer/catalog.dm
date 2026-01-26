@@ -63,7 +63,7 @@ var/list/all_technomancer_assistance = subtypesof(/datum/technomancer/assistance
 // Parameters: 1 (new_owner - mob that the book is trying to bind to)
 // Description: Links the catalog to hopefully the technomancer, so that only they can access it.
 /obj/item/technomancer_catalog/proc/bind_to_owner(var/mob/living/carbon/human/new_owner)
-	if(!owner && (technomancers.is_antagonist(new_owner.mind) || universal)) //VOREStation Edit - Universal catalogs
+	if(!owner && (GLOB.technomancers.is_antagonist(new_owner.mind) || universal)) //VOREStation Edit - Universal catalogs
 		owner = new_owner
 
 // Proc: New()
@@ -110,11 +110,14 @@ var/list/all_technomancer_assistance = subtypesof(/datum/technomancer/assistance
 // Parameters: 1 (user - the mob clicking on the catalog)
 // Description: Shows an HTML window, to buy equipment and spells, if the user is the legitimate owner.  Otherwise it cannot be used.
 /obj/item/technomancer_catalog/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!user)
-		return 0
+		return
 	if(owner && user != owner)
 		to_chat(user, span_danger("\The [src] knows that you're not the original owner, and has locked you out of it!"))
-		return 0
+		return
 	else if(!owner)
 		bind_to_owner(user)
 

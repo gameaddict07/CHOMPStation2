@@ -26,6 +26,7 @@
 	QDEL_NULL(hud_used)
 	for(var/key in alerts) //clear out alerts
 		clear_alert(key)
+	QDEL_NULL_LIST(viruses)
 	if(pulling)
 		stop_pulling() //TG does this on atom/movable but our stop_pulling proc is here so whatever
 
@@ -43,6 +44,7 @@
 	previewing_belly = null // from code/modules/vore/eating/mob_ch.dm
 	vore_selected = null // from code/modules/vore/eating/mob_vr
 	focus = null
+	LAssailant = null
 
 	motiontracker_unsubscribe(TRUE) // Force unsubscribe
 
@@ -75,6 +77,7 @@
 	zone_sel = null
 
 /mob/Initialize(mapload)
+	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MOB_CREATED, src)
 	GLOB.mob_list += src
 	if(stat == DEAD)
 		GLOB.dead_mob_list += src
@@ -209,6 +212,9 @@
 /mob/proc/is_deaf()
 	return ((sdisabilities & DEAF) || ear_deaf || incapacitated(INCAPACITATION_KNOCKOUT))
 
+/mob/proc/is_paralyzed()
+	return paralysis
+
 /mob/proc/is_physically_disabled()
 	return incapacitated(INCAPACITATION_DISABLED)
 
@@ -216,13 +222,13 @@
 	return incapacitated(INCAPACITATION_KNOCKDOWN)
 
 /mob/proc/incapacitated(var/incapacitation_flags = INCAPACITATION_DEFAULT)
-	if ((incapacitation_flags & INCAPACITATION_STUNNED) && stunned)
+	if((incapacitation_flags & INCAPACITATION_STUNNED) && stunned)
 		return 1
 
-	if ((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || resting))
+	if((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || resting))
 		return 1
 
-	if ((incapacitation_flags & INCAPACITATION_KNOCKOUT) && (stat || paralysis || sleeping || (status_flags & FAKEDEATH)))
+	if((incapacitation_flags & INCAPACITATION_KNOCKOUT) && (stat || sleeping))
 		return 1
 
 	if((incapacitation_flags & INCAPACITATION_RESTRAINED) && restrained())
@@ -281,8 +287,8 @@
 		//If we return focus to our own mob, but we are still inside something with an inherent remote view. Restart it.
 		if(restore_remote_views())
 			return TRUE
-		//Reset to common defaults: mob if on turf, otherwise current loc
-		if(isturf(loc))
+		//Reset to common defaults: mob if on turf, otherwise current loc. Fallback to mob if we are in nullspace.
+		if(isturf(loc) || isnull(loc))
 			client.set_eye(client.mob)
 			client.perspective = MOB_PERSPECTIVE
 		else
@@ -296,19 +302,19 @@
 /mob/proc/restore_remote_views()
 	if(!loc) // Nullspace during respawn
 		return FALSE
-	if(isturf(loc)) // Cannot be remote if it was a turf, also obj and turf flags overlap so stepping into space triggers remoteview endlessly.
+	if(QDELETED(loc) || QDELETED(src)) // location or ourselves is qdeleted, don't restart remote viewing during destroy
 		return FALSE
-	if(QDELETED(loc))
+	if(isturf(loc)) // Cannot be remote if it was a turf, also obj and turf flags overlap so stepping into space triggers remoteview endlessly.
 		return FALSE
 	// Check if we actually need to drop our current remote view component, as this is expensive to do, and leads to more difficult to understand error prone logic
 	var/datum/component/remote_view/remote_comp = GetComponent(/datum/component/remote_view)
 	if(remote_comp?.looking_at_target_already(loc))
 		return FALSE
-	if(isitem(loc) || isbelly(loc)) // Requires more careful handling than structures because they are held by mobs
-		AddComponent(/datum/component/remote_view/mob_holding_item, loc)
+	if(isitem(loc) || isbelly(loc) || ismecha(loc)) // Requires more careful handling than structures because they are held by mobs
+		AddComponent(/datum/component/remote_view/mob_holding_item, focused_on = loc, viewsize = null, vconfig_path = /datum/remote_view_config/inside_object)
 		return TRUE
 	if(loc.flags & REMOTEVIEW_ON_ENTER) // Handle atoms that begin a remote view upon entering them.
-		AddComponent(/datum/component/remote_view, loc)
+		AddComponent(/datum/component/remote_view, focused_on = loc, viewsize = null, vconfig_path = /datum/remote_view_config/inside_object)
 		return TRUE
 	return FALSE
 
@@ -563,7 +569,7 @@
 	var/mob/mob_eye = targets[eye_name]
 
 	if(client && mob_eye)
-		AddComponent(/datum/component/remote_view, focused_on = mob_eye)
+		AddComponent(/datum/component/remote_view, focused_on = mob_eye, viewsize = null, vconfig_path = null)
 		if(is_admin)
 			client.adminobs = TRUE
 			if(mob_eye == client.mob || !is_remote_viewing())
@@ -572,7 +578,6 @@
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"
 	set category = "OOC.Game"
-	unset_machine()
 	reset_perspective()
 
 /mob/Topic(href, href_list)
@@ -599,9 +604,13 @@
 		update_flavor_text()
 	return ..()
 
-
+///Proc that checks to see if we DO damage via pulling or not.
 /mob/proc/pull_damage()
-	return 0
+	return FALSE
+
+///Proc that says if it's POSSIBLE to be damaged via pulling or not.
+/mob/proc/pull_can_damage()
+	return FALSE
 
 /mob/verb/stop_pulling()
 
@@ -702,8 +711,8 @@
 				to_chat(H, span_warning("\The [src] grips your arm."))
 		playsound(loc, 'sound/weapons/thudswoosh.ogg', 25) //Quieter than hugging/grabbing but we still want some audio feedback
 
-		if(H.pull_damage())
-			to_chat(src, span_filter_notice("[span_red(span_bold("Pulling \the [H] in their current condition would probably be a bad idea."))]"))
+		if(H.pull_can_damage())
+			to_chat(src, span_danger(span_large("Pulling \the [H] in their current condition could easily worsen their injuries.")))
 
 	//Attempted fix for people flying away through space when cuffed and dragged.
 	if(ismob(AM))
@@ -829,94 +838,130 @@
 /mob/proc/IsAdvancedToolUser()
 	return 0
 
-/mob/proc/Stun(amount)
+/mob/proc/Stun(amount, ignore_canstun = FALSE) //Can't go below remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_STUN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANSTUN)
 		facing_dir = null
 		stunned = max(max(stunned,amount),0) //can't go below 0, getting a low amount of stun doesn't lower your current stun
 		update_canmove()	//updates lying, canmove and icons
 	return
 
-/mob/proc/SetStunned(amount) //if you REALLY need to set stun to a set amount without the whole "can't go below current stunned"
+/mob/proc/SetStunned(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_STUN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANSTUN)
 		stunned = max(amount,0)
 		update_canmove()	//updates lying, canmove and icons
 	return
 
-/mob/proc/AdjustStunned(amount)
+/mob/proc/AdjustStunned(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_STUN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANSTUN)
 		stunned = max(stunned + amount,0)
 		update_canmove()	//updates lying, canmove and icons
 	return
 
-/mob/proc/Weaken(amount)
+/mob/proc/Weaken(amount, ignore_canstun = FALSE) //Can't go below remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_WEAKEN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANWEAKEN)
 		facing_dir = null
 		weakened = max(max(weakened,amount),0)
 		update_canmove()	//updates lying, canmove and icons
 	return
 
-/mob/proc/SetWeakened(amount)
+/mob/proc/SetWeakened(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_WEAKEN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANWEAKEN)
 		weakened = max(amount,0)
 		update_canmove()	//can you guess what this does yet?
 	return
 
-/mob/proc/AdjustWeakened(amount)
+/mob/proc/AdjustWeakened(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_WEAKEN, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANWEAKEN)
 		weakened = max(weakened + amount,0)
 		update_canmove()	//updates lying, canmove and icons
 	return
 
-/mob/proc/Paralyse(amount)
+/mob/proc/Paralyse(amount, ignore_canstun = FALSE) //Can't go below remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_PARALYZE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANPARALYSE)
 		facing_dir = null
 		paralysis = max(max(paralysis,amount),0)
 	return
 
-/mob/proc/SetParalysis(amount)
+/mob/proc/SetParalysis(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_PARALYZE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANPARALYSE)
 		paralysis = max(amount,0)
 	return
 
-/mob/proc/AdjustParalysis(amount)
+/mob/proc/AdjustParalysis(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_PARALYZE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	if(status_flags & CANPARALYSE)
 		paralysis = max(paralysis + amount,0)
 	return
 
-/mob/proc/Sleeping(amount)
+/mob/proc/Sleeping(amount, ignore_canstun = FALSE) //Can't go below remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_SLEEP, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	facing_dir = null
 	sleeping = max(max(sleeping,amount),0)
 	return
 
-/mob/proc/SetSleeping(amount)
+/mob/proc/SetSleeping(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_SLEEP, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	sleeping = max(amount,0)
 	return
 
-/mob/proc/AdjustSleeping(amount)
+/mob/proc/AdjustSleeping(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_SLEEP, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	sleeping = max(sleeping + amount,0)
 	return
 
-/mob/proc/Confuse(amount)
+/mob/proc/Confuse(amount, ignore_canstun = FALSE) //Can't go below remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_CONFUSE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	confused = max(max(confused,amount),0)
 	return
 
-/mob/proc/SetConfused(amount)
+/mob/proc/SetConfused(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_CONFUSE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	confused = max(amount,0)
 	return
 
-/mob/proc/AdjustConfused(amount)
+/mob/proc/AdjustConfused(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_CONFUSE, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	confused = max(confused + amount,0)
 	return
 
-/mob/proc/Blind(amount)
+/mob/proc/Blind(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_BLIND, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	eye_blind = max(max(eye_blind,amount),0)
 	return
 
-/mob/proc/SetBlinded(amount)
+/mob/proc/SetBlinded(amount, ignore_canstun = FALSE) //Sets remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_BLIND, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	eye_blind = max(amount,0)
 	return
 
-/mob/proc/AdjustBlinded(amount)
+/mob/proc/AdjustBlinded(amount, ignore_canstun = FALSE) //Adds to remaining duration
+	if(SEND_SIGNAL(src, COMSIG_LIVING_STATUS_BLIND, amount, ignore_canstun) & COMPONENT_NO_STUN)
+		return
 	eye_blind = max(eye_blind + amount,0)
 	return
 
@@ -1029,6 +1074,8 @@
 		if(prob(selection.w_class * 5) && (affected.robotic < ORGAN_ROBOT)) //I'M SO ANEMIC I COULD JUST -DIE-.
 			var/datum/wound/internal_bleeding/I = new (min(selection.w_class * 5, 15))
 			affected.wounds += I
+			affected.update_damages()
+			H.handle_organs(TRUE) //Force an update so we start processing the internal bleeding.
 			H.custom_pain("Something tears wetly in your [affected] as [selection] is pulled free!", 50)
 
 		if (ishuman(U))

@@ -59,6 +59,10 @@
 		"shelter_capsule_luxurybar",
 		"shelter_capsule_luxurycabin",
 		"shelter_capsule_cafe",
+		"shelter_capsule_luxuryalt",
+		"shelter_capsule_kitchen",
+		"shelter_capsule_pocketdorm",
+		"shelter_capsule_luxuryrecroom",
 		// "ore_silo",
 		// "plumbing_receiver",
 		// "adv_watering_can",
@@ -104,9 +108,10 @@
 		"xenoarch_multitool",
 		"excavationdrill",
 		"ano_scanner",
-		// "anomaly_refinery",
-		// "anomaly_neutralizer",
-		// "reactive_armour",
+		//"anomaly_refinery",
+		"anomaly_neutralizer",
+		"anomaly_releaser",
+		"reactive_armour",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(CHANNEL_SCIENCE)

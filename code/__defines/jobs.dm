@@ -32,7 +32,7 @@
 	#define JOB_ALT_SECURITY_MANAGER "Security Manager"
 
 #define JOB_CHIEF_ENGINEER "Chief Engineer"
-	// Cheif Engineer alt titles
+	// Chief Engineer alt titles
 	#define JOB_ALT_HEAD_ENGINEER "Head Engineer"
 	#define JOB_ALT_FOREMAN "Foreman"
 	#define JOB_ALT_MAINTENANCE_MANAGER "Maintenance Manager"
@@ -208,6 +208,7 @@
 	#define JOB_ALT_ELECTRICIAN "Electrician"
 	#define JOB_ALT_CONSTRUCTION_ENGINEER "Construction Engineer"
 	#define JOB_ALT_ENGINEERING_CONTRACTOR "Engineering Contractor"
+	#define JOB_ALT_CHEMENGINEER "Chemical Engineer"
 	#define JOB_ALT_COMPUTER_TECHNICIAN "Computer Technician"
 	#define JOB_ALT_SALVAGE_TECHNICIAN "Salvage Technician"
 	#define JOB_ALT_DAMAGE_CONTROL_SPECIALIST "Damage Control Specialist"

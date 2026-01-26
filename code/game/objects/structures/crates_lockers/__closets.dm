@@ -8,6 +8,7 @@
 	w_class = ITEMSIZE_HUGE
 	layer = UNDER_JUNK_LAYER
 	blocks_emissive = EMISSIVE_BLOCK_GENERIC
+	flags = REMOTEVIEW_ON_ENTER
 
 	var/opened = 0
 	var/sealed = 0
@@ -168,6 +169,7 @@
 	if(initial(density))
 		density = !density
 	animate_door(TRUE)
+	SEND_SIGNAL(src, COMSIG_CLOSET_CLOSED, contents)
 	return 1
 
 //Cham Projector Exception
@@ -585,3 +587,7 @@
 	var/mob/living/M = usr
 	if(isliving(M))
 		M.begin_instant_nom(M,target,M,M.vore_selected)
+
+/obj/structure/closet/bluespace/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/bluespace_connection/permanent_network, GLOB.bslockers)

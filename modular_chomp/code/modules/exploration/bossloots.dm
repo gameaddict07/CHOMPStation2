@@ -41,11 +41,12 @@
 	name = "tyrian energy blade"
 	slot_flags = SLOT_BELT | SLOT_BACK //should make a proper sprite some time but spriting energy is hard
 	desc = "A forgien blade made via techniques of ages old. Gains a diffrent effect base off your stance."
-	description_info = "Attacking whilst on grab intent weakens the target's healing, attacking whilst on disarm weakens the target's melee potential, and attacking whilst on harm has a 2% chance to deal guarnteed massive damage."
+	description_info = "Attacking whilst on grab intent weakens the target's healing, attacking whilst on disarm weakens the target's melee potential, and attacking whilst on harm has a 2% chance to deal guaranteed massive damage."
 	active_force = 30
 	active_armourpen = 30
 	projectile_parry_chance = 20
 	defend_chance = 20
+	colorable = FALSE
 
 	icon = 'modular_chomp/icons/mob/tribal_gear.dmi'
 	icon_state = "sabre"
@@ -101,3 +102,23 @@
 	min_fire_resistance = 0.8
 	effective_fire_resistance = 1
 
+//props meant to be scanned/deconstructed by science, obtained via exploration
+/obj/item/prop/deconstructable
+	name = "strange device"
+	desc = "An advanced bit of technolgy, potentially useable by science."
+	icon = 'modular_chomp/icons/obj/weather_ruins.dmi'
+	icon_state = "gigapower_core"
+	w_class = ITEMSIZE_SMALL
+
+/obj/item/prop/deconstructable/gigacell
+	name = "giga power assembly"
+
+/obj/item/cell/device/weapon/recharge/cult
+	name = "occult cell"
+	desc = "An alien technology that produces energy seemingly out of nowhere, perhaps from another realm?"
+	icon = 'icons/obj/wizard.dmi'
+	icon_state = "soulstone2"
+	charge = 300
+	maxcharge = 300
+	charge_amount = 300
+	charge_delay = 50

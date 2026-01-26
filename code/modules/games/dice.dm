@@ -31,7 +31,7 @@
 				desc = "[initial(desc)] It looks a little misshapen, somehow..."
 				loaded = to_weight
 
-/obj/item/dice/AltClick(mob/user)
+/obj/item/dice/click_alt(mob/user)
 	..()
 	if(cheater)
 		if(!loaded)
@@ -92,6 +92,9 @@
 	result = 10
 
 /obj/item/dice/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	rollDice(user, 0)
 
 /obj/item/dice/proc/rollDice(mob/user, silent = FALSE)
@@ -141,7 +144,7 @@
 	icon_state = "[name][result]"
 	user.visible_message(span_notice("\The [user] turned \the [src] to the face reading [result] manually."))
 
-/obj/item/dice/CtrlClick(mob/user)
+/obj/item/dice/item_ctrl_click(mob/user)
 	set_dice(user)
 
 
@@ -194,8 +197,12 @@
 	can_hold = list(
 		/obj/item/dice,
 		)
+	special_handling = TRUE
 
 /obj/item/storage/dicecup/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	user.visible_message(span_notice("[user] shakes [src]."), \
 							span_notice("You shake [src]."), \
 							span_notice("You hear dice rolling."))
@@ -251,7 +258,7 @@
 		to_chat(user, span_cult("You feel extraordinarily unlucky..."))
 		if(evil)
 			user.AddComponent(
-			/datum/component/omen/dice,\
+			/datum/component/omen,\
 			incidents_left = 1,\
 			luck_mod = 1,\
 			damage_mod = 1,\
@@ -262,7 +269,7 @@
 
 		else
 			user.AddComponent(
-			/datum/component/omen/dice,\
+			/datum/component/omen,\
 			incidents_left = 1,\
 			luck_mod = 0.3,\
 			damage_mod = 1,\

@@ -217,3 +217,8 @@
 /datum/tgui_module/law_manager/admin
 /datum/tgui_module/law_manager/admin/tgui_state(mob/user)
 	return ADMIN_STATE(R_ADMIN|R_EVENT|R_DEBUG)
+
+/datum/tgui_module/law_manager/admin/tgui_close(mob/user)
+	. = ..()
+	if(!QDELETED(src))
+		qdel(src)

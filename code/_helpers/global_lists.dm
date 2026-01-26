@@ -1199,8 +1199,7 @@ GLOBAL_LIST_EMPTY(available_recipes) // List of the recipes you can use
 GLOBAL_LIST_EMPTY(acceptable_reagents) // List of the reagents you can put in
 
 
-
-/var/all_ui_styles = list(
+GLOBAL_LIST_INIT(all_ui_styles, list(
 	"Midnight"     = 'icons/mob/screen/midnight.dmi',
 	"Orange"       = 'icons/mob/screen/orange.dmi',
 	"old"          = 'icons/mob/screen/old.dmi',
@@ -1208,9 +1207,9 @@ GLOBAL_LIST_EMPTY(acceptable_reagents) // List of the reagents you can put in
 	"old-noborder" = 'icons/mob/screen/old-noborder.dmi',
 	"minimalist"   = 'icons/mob/screen/minimalist.dmi',
 	"Hologram"     = 'icons/mob/screen/holo.dmi'
-	)
+	))
 
-/var/all_ui_styles_robot = list(
+GLOBAL_LIST_INIT(all_ui_styles_robot, list(
 	"Midnight"     = 'icons/mob/screen1_robot.dmi',
 	"Orange"       = 'icons/mob/screen1_robot.dmi',
 	"old"          = 'icons/mob/screen1_robot.dmi',
@@ -1218,7 +1217,7 @@ GLOBAL_LIST_EMPTY(acceptable_reagents) // List of the reagents you can put in
 	"old-noborder" = 'icons/mob/screen1_robot.dmi',
 	"minimalist"   = 'icons/mob/screen1_robot_minimalist.dmi',
 	"Hologram"     = 'icons/mob/screen1_robot_minimalist.dmi'
-	)
+	))
 
 GLOBAL_LIST_INIT(all_tooltip_styles, list(
 	"Midnight",		//Default for everyone is the first one,
@@ -1243,10 +1242,10 @@ var/global/datum/emergency_shuttle_controller/emergency_shuttle = new
 
 GLOBAL_LIST_EMPTY(gun_choices)
 
-GLOBAL_LIST_INIT(severity_to_string, list(
-	EVENT_LEVEL_MUNDANE = "Mundane",
-	EVENT_LEVEL_MODERATE = "Moderate",
-	EVENT_LEVEL_MAJOR = "Major"
+GLOBAL_ALIST_INIT(severity_to_string, list(
+	/* EVENT_LEVEL_MUNDANE = */ "Mundane",
+	/* EVENT_LEVEL_MODERATE = */ "Moderate",
+	/* EVENT_LEVEL_MAJOR = */ "Major"
 	))
 
 //Some global icons for the examine tab to use to display some item properties.
@@ -1498,6 +1497,7 @@ GLOBAL_LIST_INIT(sheet_reagents, list( //have a number of reagents divisible by 
 	/obj/item/stack/material/sandstone = list(REAGENT_ID_SILICON, REAGENT_ID_OXYGEN),
 	/obj/item/stack/material/marble = list(REAGENT_ID_CALCIUM),
 	/obj/item/stack/material/titanium = list(REAGENT_ID_ALUMINIUM),
+	/obj/item/stack/material/lead = list(REAGENT_ID_LEAD),
 	// Nuclear
 	/obj/item/stack/material/mhydrogen = list(REAGENT_ID_HYDROGEN),
 	/obj/item/stack/material/deuterium = list(REAGENT_ID_HYDROGEN),
@@ -1653,6 +1653,7 @@ GLOBAL_LIST_INIT(suitable_fish_turf_types,  list(
 	/turf/simulated/floor/water
 ))
 
+GLOBAL_LIST_BOILERPLATE(papers_dockingcode, /obj/item/paper/dockingcodes)
 
 //Chamelion clothing was all stupid so it's done here instead.
 //Jumpsuit

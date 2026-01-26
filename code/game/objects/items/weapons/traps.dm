@@ -34,8 +34,10 @@
 /obj/item/beartrap/proc/can_use(mob/user)
 	return (user.IsAdvancedToolUser() && !issilicon(user) && !user.stat && !user.restrained())
 
-/obj/item/beartrap/attack_self(mob/user as mob)
-	..()
+/obj/item/beartrap/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!deployed && can_use(user))
 		user.visible_message(
 			span_danger("[user] starts to deploy \the [src]."),
@@ -98,15 +100,11 @@
 
 	//armour
 	var/blocked = L.run_armor_check(target_zone, "melee")
-	var/soaked = L.get_armor_soak(target_zone, "melee")
 
 	if(blocked >= 100)
 		return
 
-	if(soaked >= 30)
-		return
-
-	if(!L.apply_damage(30, BRUTE, target_zone, blocked, soaked, used_weapon=src))
+	if(!L.apply_damage(30, BRUTE, target_zone, blocked, used_weapon=src))
 		return 0
 
 	if(ishuman(L))
@@ -222,8 +220,10 @@
 	else
 		..()
 
-/obj/item/material/barbedwire/attack_self(mob/user as mob)
-	..()
+/obj/item/material/barbedwire/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!anchored && can_use(user))
 		user.visible_message(
 			span_danger("[user] starts to deploy \the [src]."),
@@ -347,12 +347,8 @@
 
 	//armour
 	var/blocked = L.run_armor_check(target_zone, "melee")
-	var/soaked = L.get_armor_soak(target_zone, "melee")
 
 	if(blocked >= 100)
-		return
-
-	if(soaked >= 30)
 		return
 
 	if(L.buckled) //wheelchairs, office chairs, rollerbeds
@@ -362,7 +358,7 @@
 
 	L.add_modifier(/datum/modifier/entangled, 3 SECONDS)
 
-	if(!L.apply_damage(force * (issilicon(L) ? 0.25 : 1), BRUTE, target_zone, blocked, soaked, sharp, edge, src))
+	if(!L.apply_damage(force * (issilicon(L) ? 0.25 : 1), BRUTE, target_zone, blocked, sharp, edge, src))
 		return
 
 	playsound(src, 'sound/effects/glass_step.ogg', 50, 1) // not sure how to handle metal shards with sounds

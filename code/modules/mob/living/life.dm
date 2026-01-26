@@ -25,7 +25,8 @@
 		handle_breathing()
 
 		//Mutations and radiation
-		handle_mutations_and_radiation()
+		handle_mutations()
+		handle_radiation()
 
 
 
@@ -89,8 +90,15 @@
 /mob/living/proc/handle_breathing()
 	return
 
-/mob/living/proc/handle_mutations_and_radiation()
-	return
+/mob/living/proc/handle_mutations()
+	SHOULD_CALL_PARENT(TRUE)
+	if(SEND_SIGNAL(src, COMSIG_HANDLE_MUTATIONS) & COMPONENT_BLOCK_LIVING_MUTATIONS)
+		return COMPONENT_BLOCK_LIVING_MUTATIONS
+
+/mob/living/proc/handle_radiation()
+	SHOULD_CALL_PARENT(TRUE)
+	if(SEND_SIGNAL(src, COMSIG_HANDLE_RADIATION) & COMPONENT_BLOCK_LIVING_RADIATION)
+		return COMPONENT_BLOCK_LIVING_RADIATION
 
 /mob/living/proc/handle_chemicals_in_body()
 	return
@@ -127,13 +135,8 @@
 /mob/living/proc/handle_regular_status_updates()
 	updatehealth()
 	if(stat != DEAD)
-		if(paralysis)
-			set_stat(UNCONSCIOUS)
-		else if (status_flags & FAKEDEATH)
-			set_stat(UNCONSCIOUS)
-		else
-			set_stat(CONSCIOUS)
-		return 1
+		set_stat(CONSCIOUS)
+		return TRUE
 
 /mob/living/proc/handle_statuses()
 	handle_stunned()
@@ -224,14 +227,11 @@
 			adjustEarDamage(-0.05,-1)
 
 /mob/living/handle_regular_hud_updates()
-	if(!client)
-		return 0
-	..()
-
+	. = ..()
+	if(!.)
+		return
 	handle_darksight()
-	handle_hud_icons()
-
-	return 1
+	handle_hud_icons_health()
 
 /mob/living/proc/update_sight()
 	if(!seedarkness)
@@ -247,12 +247,11 @@
 
 	return
 
-/mob/living/proc/handle_hud_icons()
-	handle_hud_icons_health()
-	return
-
 /mob/living/proc/handle_hud_icons_health()
-	return
+	SHOULD_CALL_PARENT(TRUE)
+	if(SEND_SIGNAL(src,COMSIG_MOB_HANDLE_HUD_HEALTH_ICON) & COMSIG_COMPONENT_HANDLED_HEALTH_ICON)
+		return FALSE
+	return TRUE
 
 /mob/living/proc/handle_light()
 	if(glow_override)
@@ -272,6 +271,7 @@
 		return FALSE
 
 /mob/living/proc/handle_darksight()
+	SEND_SIGNAL(src,COMSIG_MOB_HANDLE_HUD_DARKSIGHT)
 	if(!seedarkness) //Cheap 'always darksight' var
 		dsoverlay.alpha = 255
 		return
@@ -304,13 +304,11 @@
 	if(stat != DEAD && toggled_sleeping)
 		Sleeping(2)
 	if(sleeping)
-		//CHOMPEdit Start
 		if(iscarbon(src))
 			var/mob/living/carbon/C = src
 			AdjustSleeping(-1 * C.species.waking_speed)
 		else
 			AdjustSleeping(-1)
-		//CHOMPEdit End
 		throw_alert("asleep", /atom/movable/screen/alert/asleep)
 	else
 		clear_alert("asleep")

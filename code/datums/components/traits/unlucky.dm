@@ -88,10 +88,10 @@
 	RegisterSignal(parent, COMSIG_STUN_EFFECT_ACT, PROC_REF(check_taser))
 	RegisterSignal(parent, COMSIG_MOB_ROLLED_DICE, PROC_REF(check_roll))
 	RegisterSignal(parent, COMSIG_HUMAN_ON_CATCH_THROW, PROC_REF(check_throw))
-	RegisterSignal(parent, COMSIG_PICKED_UP_ITEM, PROC_REF(check_pickup))
+	RegisterSignal(parent, COMSIG_ITEM_PICKUP, PROC_REF(check_pickup))
 
 /datum/component/omen/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ON_CARBON_SLIP, COMSIG_MOVABLE_MOVED, COMSIG_STUN_EFFECT_ACT, COMSIG_MOVED_DOWN_STAIRS, COMSIG_MOB_ROLLED_DICE, COMSIG_HUMAN_ON_CATCH_THROW, COMSIG_PICKED_UP_ITEM))
+	UnregisterSignal(parent, list(COMSIG_ON_CARBON_SLIP, COMSIG_MOVABLE_MOVED, COMSIG_STUN_EFFECT_ACT, COMSIG_MOVED_DOWN_STAIRS, COMSIG_MOB_ROLLED_DICE, COMSIG_HUMAN_ON_CATCH_THROW, COMSIG_ITEM_PICKUP))
 
 /datum/component/omen/proc/consume_omen()
 	incidents_left--
@@ -146,7 +146,8 @@
 			if(darth_airlock.locked || !darth_airlock.arePowerSystemsOn())
 				continue
 			to_chat(living_guy, span_warning("The airlock suddenly closes on you!"))
-			living_guy.Paralyse(1 SECONDS)
+			living_guy.Paralyse(5)
+			living_guy.Sleeping(5)
 			slam_airlock(darth_airlock)
 			consume_omen()
 			return
@@ -167,7 +168,7 @@
 					continue //Don't do anything to ourselves.
 				if(living_mob.stat)
 					continue
-				if(!CanStumbleVore(living_guy, living_mob) && !CanStumbleVore(living_mob, living_guy)) //Works both ways! Either way, someone's getting eaten!
+				if(!can_stumble_vore(living_guy, living_mob) && !can_stumble_vore(living_mob, living_guy)) //Works both ways! Either way, someone's getting eaten!
 					continue
 				living_mob.stumble_into(living_guy) //logic reversed here because the game is DUMB. This means that living_guy is stumbling into the target!
 				living_guy.visible_message(span_danger("[living_guy] loses their balance and slips into [living_mob]!"), span_boldwarning("You lose your balance, slipping into [living_mob]!"))
@@ -194,7 +195,7 @@
 				our_guy.visible_message(span_danger("[our_guy] slips on a spill near the [evil_disposal] and falls in!"), span_boldwarning("You slip on a spill near the [evil_disposal] and fall in!"))
 				living_guy.forceMove(evil_disposal)
 				evil_disposal.flush = TRUE
-				evil_disposal.update()
+				evil_disposal.update_icon()
 				living_guy.Stun(5)
 				consume_omen()
 				return
@@ -278,8 +279,9 @@
 		for(var/obj/structure/table/evil_table in the_turf)
 			if(!evil_table.material) //We only want tables, not just table frames.
 				continue
-			var/datum/gender/gender = GLOB.gender_datums[living_guy.get_visible_gender()]
-			living_guy.visible_message(span_danger("[living_guy] stubs [gender.his] toe on [evil_table]!"), span_bolddanger("You stub your toe on [evil_table]!"))
+			if(!prob(10)) //Reduce the chance further, due to the number of tables that are passed in normal play.
+				continue
+			living_guy.visible_message(span_danger("[living_guy] stubs [living_guy.p_their()] toe on [evil_table]!"), span_bolddanger("You stub your toe on [evil_table]!"))
 			living_guy.apply_damage(2 * damage_mod, BRUTE, pick(BP_L_FOOT, BP_R_FOOT), used_weapon = "blunt force trauma")
 			living_guy.adjustHalLoss(25) //It REALLY hurts.
 			living_guy.Weaken(3)
@@ -314,8 +316,7 @@
 
 	if(prob(30 * luck_mod) && our_guy.get_bodypart_name(BP_HEAD)) /// Bonk!
 		playsound(our_guy, 'sound/effects/tableheadsmash.ogg', 90, TRUE)
-		var/datum/gender/gender = GLOB.gender_datums[our_guy.get_visible_gender()]
-		our_guy.visible_message(span_danger("[our_guy] hits [gender.his] head really badly falling down!"), span_bolddanger("You hit your head really badly falling down!"))
+		our_guy.visible_message(span_danger("[our_guy] hits [our_guy.p_their()] head really badly falling down!"), span_bolddanger("You hit your head really badly falling down!"))
 		var/max_health_coefficient = (our_guy.maxHealth * 0.5)
 		our_guy.apply_damage(max_health_coefficient * damage_mod, BRUTE, BP_HEAD, used_weapon = "slipping")
 		if(ishuman(our_guy))
@@ -457,8 +458,7 @@
 		if(!damage_to_inflict)
 			return
 
-		var/datum/gender/gender = GLOB.gender_datums[unlucky_human.get_visible_gender()]
-		unlucky_human.visible_message(span_danger("[unlucky_human] accidentally [injury_verb] [gender.his] hand on [item]!"))
+		unlucky_human.visible_message(span_danger("[unlucky_human] accidentally [injury_verb] [unlucky_human.p_their()] hand on [item]!"))
 		unlucky_human.apply_damage(damage_to_inflict * damage_mod, damage_type, current_hand, sharp = is_sharp, edge = has_edge, used_weapon = injury_type)
 
 /datum/component/omen/proc/check_stairs(mob/living/unlucky_soul)
@@ -537,10 +537,3 @@
 	. = ..()
 	var/mob/living/living_parent = parent
 	living_parent.remove_filter("omen")
-
-/**
- * The dice omen.
- * Single use omen from rolling a nat 1 on a cursed d20.
- */
-/datum/component/omen/dice
-	incidents_left = 1

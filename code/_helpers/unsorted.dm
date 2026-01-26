@@ -1121,16 +1121,23 @@ GLOBAL_LIST_INIT(common_tools, list(
 	return .
 
 // Returns an instance of a valid surgery surface.
-/mob/living/proc/get_surgery_surface()
-	if(!lying)
-		return null // Not lying down means no surface.
-	var/obj/surface = null
+/mob/living/proc/get_surgery_cleanliness(mob/living/user)
+	if(!lying && user != src)
+		return null // Not lying down means no surface (blocks surgery)
+	var/cleanliness = 0
 	for(var/obj/O in loc) // Looks for the best surface.
-		if(O.surgery_odds)
-			if(!surface || surface.surgery_odds < O.surgery_odds)
-				surface = O
-	if(surface)
-		return surface
+		if(O.surgery_cleanliness)
+			if(!cleanliness || cleanliness < O.surgery_cleanliness)
+				cleanliness = O.surgery_cleanliness
+	if(!cleanliness) //We have no good objects on the turf. Time to check the floor!
+		var/turf/T = get_turf(src)
+		if(T.was_bloodied) //floor is contaminated
+			return 0
+		//Turf generally start with a germ level of 110 and cap out at 200.
+		//Can use sterilizine to lower germs of the floor, or space cleaner.
+		cleanliness = CLAMP(100 - T.germ_level, 0, 25)
+
+	return cleanliness
 
 /proc/reverse_direction(dir)
 	return GLOB.reverse_dir[dir]
@@ -1204,21 +1211,21 @@ var/list/WALLITEMS = list(
 	var/color = hex ? hex : "#[num2hex(red, 2)][num2hex(green, 2)][num2hex(blue, 2)]"
 	return "<span style='font-face: fixedsys; font-size: 14px; background-color: [color]; color: [color]'>___</span>"
 
-var/mob/dview/dview_mob
+GLOBAL_DATUM(dview_mob, /mob/dview)
 
 //Version of view() which ignores darkness, because BYOND doesn't have it.
 /proc/dview(var/range = world.view, var/center, var/invis_flags = 0)
 	if(!center)
 		return
-	if(!dview_mob) //VOREStation Add: Debugging
-		dview_mob = new
+	if(!GLOB.dview_mob) //VOREStation Add: Debugging
+		GLOB.dview_mob = new
 
-	dview_mob.loc = center
+	GLOB.dview_mob.loc = center
 
-	dview_mob.see_invisible = invis_flags
+	GLOB.dview_mob.see_invisible = invis_flags
 
-	. = view(range, dview_mob)
-	dview_mob.loc = null
+	. = view(range, GLOB.dview_mob)
+	GLOB.dview_mob.loc = null
 
 /mob/dview
 	invisibility = INVISIBILITY_ABSTRACT
@@ -1252,7 +1259,7 @@ var/mob/dview/dview_mob
 	stack_trace("Attempt to delete the dview_mob: [log_info_line(src)]")
 	if (!force)
 		return QDEL_HINT_LETMELIVE
-	global.dview_mob = new
+	GLOB.dview_mob = new
 	return ..()
 
 /proc/screen_loc2turf(scr_loc, turf/origin)

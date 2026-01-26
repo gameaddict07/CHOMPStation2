@@ -11,16 +11,16 @@ SUBSYSTEM_DEF(events)
 	var/list/datum/event/finished_events = list()
 
 	var/list/datum/event/allEvents
-	var/list/datum/event_container/event_containers
+	var/alist/event_containers
 
 	var/datum/event_meta/new_event = new
 
 /datum/controller/subsystem/events/Initialize()
 	allEvents = subtypesof(/datum/event)
 	event_containers = list(
-			EVENT_LEVEL_MUNDANE 	= new/datum/event_container/mundane,
-			EVENT_LEVEL_MODERATE	= new/datum/event_container/moderate,
-			EVENT_LEVEL_MAJOR 		= new/datum/event_container/major
+			/*EVENT_LEVEL_MUNDANE 	= */ new/datum/event_container/mundane,
+			/*EVENT_LEVEL_MODERATE	= */ new/datum/event_container/moderate,
+			/*EVENT_LEVEL_MAJOR 	= */ new/datum/event_container/major
 		)
 	if(global.using_map.use_overmap)
 		GLOB.overmap_event_handler.create_events(global.using_map.overmap_z, global.using_map.overmap_size, global.using_map.overmap_event_areas)
