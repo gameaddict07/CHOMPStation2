@@ -38,6 +38,7 @@
 	var/icon_old = null
 	var/pathweight = 1          // How much does it cost to pathfind over this turf?
 	var/blessed = 0             // Has the turf been blessed?
+	var/dig_exhaustion_chance = 60 // Chance that the digging loot will be exhausted, if set to TURF_DIG_LOOT_EXHAUSTED then the turf is exhausted of loot. if set to TURF_DIG_LOOT_ENDLESS it will never run out.
 
 	var/list/decals
 
@@ -173,7 +174,12 @@
 		step(user.pulling, get_dir(user.pulling.loc, src))
 	return 1
 
-/turf/attackby(obj/item/W as obj, mob/user as mob)
+/turf/attackby(obj/item/W, mob/user)
+	// Check if this turf can be dug up, check initial because we remove the flag when we've exhausted all loot, but still want to keep dig functionality
+	if((flags & TURF_CAN_DIG_SHOVEL) && !density && istype(W, /obj/item/shovel))
+		handle_turf_dig(user, W)
+		return TRUE
+	// Collect objects on turf if the bag supports scooping stuff up
 	if(istype(W, /obj/item/storage))
 		var/obj/item/storage/S = W
 		if(S.use_to_pickup && S.collection_mode)
@@ -531,3 +537,14 @@
 		if(!ismopable(movable_content))
 			continue
 		movable_content.wash(clean_types)
+
+/// Used during turf_cascade subsystem to determine additional effects when spreading, and directions it may spread
+/turf/proc/conversion_cascade_act(list/already_marked_turfs)
+	var/list/expanding_turfs = list()
+
+	for(var/expand_dir in GLOB.cardinalz)
+		var/turf/next_turf = get_step(src, expand_dir)
+		if(next_turf && next_turf.type != type && !(next_turf in already_marked_turfs)) // Yes in already_marked_turfs is expensive, but less expensive than 6 dupes per turf potentially in the loop
+			expanding_turfs += next_turf
+
+	return expanding_turfs

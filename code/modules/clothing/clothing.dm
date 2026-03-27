@@ -57,7 +57,7 @@
 	..()
 	if(enables_planes)
 		user.recalculate_vis()
-	if(("[slot]" in slot_flags_enumeration) && (slot_flags & slot_flags_enumeration["[slot]"]))
+	if(("[slot]" in GLOB.slot_flags_enumeration) && (slot_flags & GLOB.slot_flags_enumeration["[slot]"]))
 		for(var/trait in clothing_traits)
 			ADD_CLOTHING_TRAIT(user, trait)
 
@@ -785,7 +785,7 @@
 	// I_HELP: No painful description, messages only sent to prey. Similar to inshoe steppies from before.
 	// I_DISARM: Painful yet harmless descriptions, weaken on walk. Attack logs on weaken.
 	// I_GRAB: Grabby/Squishing descriptions, weaken on walk. Attack logs on weaken.
-	// I_HARM: Rand .5-1.5 multiplied by .25 min or 1.75 max, multiplied by 3.5 on walk. Ranges from .125 min to 9.1875 max damage to each limb
+	// I_HURT: Rand .5-1.5 multiplied by .25 min or 1.75 max, multiplied by 3.5 on walk. Ranges from .125 min to 9.1875 max damage to each limb
 	var/message_pred = null
 	var/message_prey = null
 

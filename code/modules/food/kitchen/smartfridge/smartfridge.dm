@@ -23,6 +23,7 @@
 	var/wrenchable = 0
 	var/datum/wires/smartfridge/wires = null
 	var/persistent = null // Path of persistence datum used to track contents
+	circuit = /obj/item/circuitboard/smartfridge //This one is meant to be uncraftable, however.
 
 	var/datum/looping_sound/fridge/soundloop // CHOMPEdit: Fridges hum!
 	var/playing_sound = FALSE // CHOMPEdit: Fridges hum!
@@ -41,6 +42,7 @@
 
 	soundloop = new(list(src), FALSE) // CHOMPEdit: Fridge hum!
 	update_icon()
+	default_apply_parts()
 
 /obj/machinery/smartfridge/Destroy()
 	qdel(wires)
@@ -52,7 +54,7 @@
 	QDEL_NULL(soundloop) // CHOMPEdit: Fridge hum!
 	return ..()
 
-/obj/machinery/smartfridge/proc/accept_check(var/obj/item/O as obj)
+/obj/machinery/smartfridge/proc/accept_check(obj/item/O)
 	return FALSE
 
 /obj/machinery/smartfridge/process()
@@ -114,7 +116,7 @@
 			if(6 to INFINITY)
 				add_overlay("[icon_base]-[icon_contents]3")
 
-/obj/machinery/smartfridge/attackby(var/obj/item/O as obj, var/mob/user as mob)
+/obj/machinery/smartfridge/attackby(obj/item/O, mob/user)
 	if(O.has_tool_quality(TOOL_SCREWDRIVER))
 		panel_open = !panel_open
 		user.visible_message(span_filter_notice("[user] [panel_open ? "opens" : "closes"] the maintenance panel of \the [src]."), span_filter_notice("You [panel_open ? "open" : "close"] the maintenance panel of \the [src]."))
@@ -123,6 +125,13 @@
 		return
 
 	if(wrenchable && default_unfasten_wrench(user, O, 20))
+		return
+
+	if(O.has_tool_quality(TOOL_CROWBAR))
+		if(allowed(user))
+			default_deconstruction_crowbar(user, O)
+		else
+			to_chat(user, span_warning("\The [src] smartly denies you access to deconstruct it."))
 		return
 
 	if(istype(O, /obj/item/multitool) || O.has_tool_quality(TOOL_WIRECUTTER))
@@ -155,24 +164,24 @@
 
 	else if(istype(O, /obj/item/gripper)) // Grippers. ~Mechoid.
 		var/obj/item/gripper/B = O	//B, for Borg.
-		var/obj/item/wrapped = B.get_current_pocket()
+		var/obj/item/wrapped = B.get_wrapped_item()
 		if(!wrapped)
 			to_chat(user, span_filter_notice("\The [B] is not holding anything."))
-			return
+			return TRUE
 		else
 			to_chat(user, span_filter_notice("You use \the [B] to put \the [wrapped] into \the [src]."))
-		return
+		return FALSE
 
 	else
 		to_chat(user, span_notice("\The [src] smartly refuses [O]."))
-		return 1
+		return TRUE
 
 /obj/machinery/smartfridge/secure/emag_act(var/remaining_charges, var/mob/user)
 	if(!emagged)
 		emagged = 1
 		locked = -1
 		to_chat(user, span_filter_notice("You short out the product lock on [src]."))
-		return 1
+		return TRUE
 
 /obj/machinery/smartfridge/proc/find_record(var/obj/item/O)
 	for(var/datum/stored_item/I as anything in item_records)

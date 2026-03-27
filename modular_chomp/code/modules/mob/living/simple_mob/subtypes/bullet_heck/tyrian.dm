@@ -52,6 +52,7 @@
 	icon_living = "poison_boss"
 	wreckage = /obj/item/prop/tyrlore/acid_boss
 	specialattackprojectile = /obj/item/projectile/energy/neurotoxin/toxic/tyr_flora
+	projectiletype = /obj/item/projectile/energy/neurotoxin/toxic/tyr_flora
 	var/regeneration_strength = -20
 
 /mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/acid_boss/load_default_bellies()
@@ -91,54 +92,15 @@
 			addtimer(CALLBACK(src, PROC_REF(bullet_blossom), A, rng_cycle, 10), 0.5 SECONDS, TIMER_DELETE_ME)
 			attackcycle = 0
 
-/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/sonic_boss
-	name = "experiment 10"
-	desc = "A strange furball, the air vibrating around it."
-	specialattackprojectile = /obj/item/projectile/knockback/slow
-	icon_state = "sonic_boss"
-	icon_living = "sonic_boss"
-	projectiletype = /obj/item/projectile/knockback/slow
-	wreckage = /obj/item/prop/tyrlore/sonic_boss
-
-/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/sonic_boss/load_default_bellies()
-	. = ..()
-	var/obj/belly/B = vore_selected
-	B.name = "alien gut"
-	B.desc = "Your ears ring as the stomach groans to life around you. The constant ringing mixing with acidic gurgling, and gutteral groans. Silver flesh kneading at your figure, whilst the beast ignores you stewing in it's gut."
-	B.digest_brute = 1.5
-	B.digest_burn = 0.5
-	B.digestchance = 0
-	B.absorbchance = 0
-	B.escapechance = 15
-
-/obj/item/projectile/knockback/slow
-	speed = 10
-
-/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/sonic_boss/do_special_attack(atom/A)
-	rng_cycle = rand(1,4)
-	switch(attackcycle)
-		if(1)
-			addtimer(CALLBACK(src, PROC_REF(quad_random_firing), A, 20, rng_cycle, 10), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-		if(2)
-			addtimer(CALLBACK(src, PROC_REF(dual_spin), A, rng_cycle, 5), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-		if(3)
-			addtimer(CALLBACK(src, PROC_REF(rising_star), A, rng_cycle, 10), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-		if(4)
-			addtimer(CALLBACK(src, PROC_REF(hole_in_wall), A, rng_cycle, 10), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-
 /mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/shield_boss
 	name = "experiment 15"
 	desc = "A strange furball gaurded by a transparent barrier."
-	specialattackprojectile = /obj/item/projectile/energy/eclipse/tyrjavelin
+	specialattackprojectile = /obj/item/projectile/energy/eclipse_boss/tyrjavelin
 	health = 700
 	maxHealth = 700 //shield mechanic
 	icon_state = "UPshield_boss"
 	icon_living = "UPshield_boss"
-	projectiletype = /obj/item/projectile/energy/eclipse/tyrjavelin
+	projectiletype = /obj/item/projectile/energy/eclipse_boss/tyrjavelin
 	wreckage = /obj/item/prop/tyrlore/shield_boss
 	var/fullshield = 300
 	var/shieldrage = 300
@@ -204,30 +166,29 @@
 	melee_attack_delay = 2.5 SECONDS
 	movement_cooldown = 4
 	special_attack_cooldown = 8 SECONDS
-	evasion = 200 //forced to fight in melee lol
+	var/parry_chance = 100
+
+/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/crystal_boss/bullet_act(obj/item/projectile/P)
+	if(prob(parry_chance))
+		visible_message(span_danger("The [P.name] gets reflected by [src]'s armor!"), \
+						span_userdanger("The [P.name] gets reflected by [src]'s armor!"))
+
+		// Find a turf near or on the original location to bounce to
+		if(P.starting)
+			var/new_x = P.starting.x + pick(0, 0, -1, 1, -2, 2, -2, 2, -2, 2, -3, 3, -3, 3)
+			var/new_y = P.starting.y + pick(0, 0, -1, 1, -2, 2, -2, 2, -2, 2, -3, 3, -3, 3)
+			var/turf/curloc = get_turf(src)
+
+			// redirect the projectile
+			P.redirect(new_x, new_y, curloc, src)
+			P.reflected = 1
+
+			return -1 // complete projectile permutation
+
+	return (..(P))
 
 /mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/crystal_boss/do_special_attack(atom/A)
 	addtimer(CALLBACK(src, PROC_REF(bomb_chaos), A, 4), 1.5 SECONDS, TIMER_DELETE_ME)
-
-/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/naga_boss
-	name = "experiment 25"
-	icon_state = "naga_boss"
-	icon_living = "naga_boss"
-	wreckage = /obj/item/prop/tyrlore/gravity_boss
-	specialattackprojectile = /obj/item/projectile/energy/eclipse/tyrjavelin
-
-/mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/naga_boss/do_special_attack(atom/A)
-	rng_cycle = rand(1,3)
-	switch(attackcycle)
-		if(1)
-			addtimer(CALLBACK(src, PROC_REF(dual_spin), A, rng_cycle, 5), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-		if(2)
-			addtimer(CALLBACK(src, PROC_REF(gravity_surge), A, rng_cycle, 7, 1), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
-		if(3)
-			addtimer(CALLBACK(src, PROC_REF(rising_star), A, rng_cycle, 15), 0.5 SECONDS, TIMER_DELETE_ME)
-			attackcycle = 0
 
 //The Ai control units of Tyr
 /mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/defense_ai
@@ -286,8 +247,8 @@
 /mob/living/simple_mob/mechanical/mecha/eclipse/tankyboss/swarm_ai
 	name = "swarm controler"
 	desc = "A massive hivebot that has shifting bits of metal upon it's body."
-	health = 700
-	maxHealth = 700
+	health = 400
+	maxHealth = 400
 	icon_state = "bright_green"
 	icon_living = "bright_green"
 	icon = 'modular_chomp/icons/mob/hivebot.dmi'
@@ -363,16 +324,3 @@
 	adjustToxLoss(-1000)
 	adjustOxyLoss(-1000)
 	adjustCloneLoss(-1000)
-/*
-/mob/living/simple_mob/mechanical/hivebot/tyr/heart
-	name = "barrier unit"
-	icon = 'modular_chomp/icons/mob/tyr.dmi'
-	icon_state = "guardian"
-	icon_living = "guardian"
-	maxHealth = 1.5 LASERS_TO_KILL // 60 hp
-	health = 1.5 LASERS_TO_KILL
-	melee_damage_lower = 10
-	melee_damage_upper = 10
-	attack_armor_pen = 80
-	movement_cooldown = 4
-*/

@@ -9,15 +9,32 @@
 		"rdconsole",
 		"bomb_tester",
 		"tech_disk",
-		// "rdservercontrol",
-		// "doppler_array",
+		"rdservercontrol",
+		"doppler_array",
 		// "experimentor",
 		"destructive_analyzer",
 		// "destructive_scanner",
+		"artifact_harvester",
+		"artifact_scanpad",
 		// "laptop",
 		// "portadrive_basic",
 		// "portadrive_advanced",
 		// "portadrive_super",
+		"electropack",
+	)
+
+/datum/techweb_node/protolathe_boards
+	id = TECHWEB_NODE_PROTOLATHE_BOARDS
+	starting_node = TRUE
+	display_name = "Protolathe Boards"
+	description = "The fundamental technology required for production of more experimental protolathe boards."
+	design_ids = list(
+		"protolathe_science",
+		"protolathe_service",
+		"protolathe_medical",
+		"protolathe_cargo",
+		"protolathe_engineering",
+		"protolathe_security",
 	)
 
 /datum/techweb_node/bluespace_theory
@@ -48,7 +65,6 @@
 		"belt_holding_utility",
 		"bluespacebeaker",
 		"bsflare",
-		"bluespace_crystal",
 		"beacon",
 		"beacon_locator",
 		"chameleon",
@@ -63,7 +79,6 @@
 		"shelter_capsule_kitchen",
 		"shelter_capsule_pocketdorm",
 		"shelter_capsule_luxuryrecroom",
-		// "ore_silo",
 		// "plumbing_receiver",
 		// "adv_watering_can",
 		// "bluespace_coffeepot",
@@ -73,7 +88,7 @@
 		// "gigabeacon",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
-	// discount_experiments = list(/datum/experiment/scanning/points/bluespace_crystal = TECHWEB_TIER_2_POINTS)
+	discount_experiments = list(/datum/experiment/scanning/bluespace_crystal = TECHWEB_TIER_2_POINTS)
 	announce_channels = list(CHANNEL_SCIENCE, CHANNEL_MEDICAL, CHANNEL_SERVICE, CHANNEL_SUPPLY)
 
 /datum/techweb_node/bluespace_travel
@@ -99,24 +114,59 @@
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(CHANNEL_SCIENCE)
 
+/datum/techweb_node/xenoarch
+	id = TECHWEB_NODE_XENOARCHEOLOGY
+	display_name = "Xenoarcheology Research"
+	description = "Researching those who came before us, extracting artifacts of great value, and harnessing their powers."
+	prereq_ids = list(TECHWEB_NODE_FUNDIMENTAL_SCI)
+	design_ids = list(
+		"ano_scanner",
+		"xenoarch_multitool",
+		"excavationdrill",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
+	announce_channels = list(CHANNEL_SCIENCE)
+
 /datum/techweb_node/anomaly_research
 	id = TECHWEB_NODE_ANOMALY_RESEARCH
 	display_name = "Anomaly Research"
 	description = "Delving into the study of mysterious anomalies to investigate methods to refine and harness their unpredictable energies."
 	prereq_ids = list(TECHWEB_NODE_APPLIED_BLUESPACE)
 	design_ids = list(
-		"xenoarch_multitool",
-		"excavationdrill",
-		"ano_scanner",
-		//"anomaly_refinery",
 		"anomaly_neutralizer",
-		"anomaly_releaser",
+		"sci_anomaly_releaser",
 		"reactive_armour",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
 	announce_channels = list(CHANNEL_SCIENCE)
 
-// Decided that we were not keen on this being able to be printed freely as we immediately saw undesirable behaviour //CHOMPEdit - Re-enable
+/datum/techweb_node/anomaly_harvesting
+	id = TECHWEB_NODE_ANOMALY_HARVESTING
+	display_name = "Anomaly Harvesting"
+	description = "Harness the power of the mysterious anomalies, refining their energies into tangible materials."
+	prereq_ids = list(TECHWEB_NODE_ANOMALY_RESEARCH)
+	design_ids = list(
+		"anomaly_harvester",
+		"anomaly_scanner",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)
+	announce_channels = list(CHANNEL_SCIENCE)
+
+/datum/techweb_node/applied_anomaly_harvesting
+	id = TECHWEB_NODE_APPLIED_ANOMALY_HARVESTING
+	display_name = "Applied Anomaly Harvesting"
+	description = "Advanced research in the anomaly field, allowing sophisticated tools to aid in their study."
+	prereq_ids = list(TECHWEB_NODE_ANOMALY_HARVESTING)
+	design_ids = list(
+		"anomaly_releaser",
+		"anom_gun",
+		"borg_anomgun_module"
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+	announce_channels = list(CHANNEL_SCIENCE)
+	discount_experiments = list(/datum/experiment/scanning/points/anomaly = TECHWEB_TIER_3_POINTS)
+
+// Decided that we were not keen on this being able to be printed freely as we immediately saw undesirable behaviour // CHOMPEnable Start
 /datum/techweb_node/telekinetics
 	id = TECHWEB_NODE_TELEKINETIC_RESEARCH
 	display_name = "Applied Telekinetics Research"
@@ -127,4 +177,16 @@
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
 	announce_channels = list(CHANNEL_SCIENCE)
-// //CHOMPEdit - Re-enable
+// CHOMPEnable End
+
+/*/datum/techweb_node/paradox_rift //CHOMPEdit Start
+	id = TECHWEB_NODE_PARADOX_RIFT
+	display_name = "Paradox Rift"
+	description = "A device that creates a localized paradox, causing unpredictable effects."
+	prereq_ids = list(TECHWEB_NODE_ANOMALY_HARVESTING, TECHWEB_NODE_BLUESPACE_TRAVEL, TECHWEB_NODE_TELEPORTER)
+	design_ids = list(
+		"paradoxrift",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS)
+	announce_channels = list(CHANNEL_SCIENCE)
+*/ //CHOMPEdit End
